@@ -20,6 +20,9 @@
 .env.production.local
 .vercel
 
+#I'm adding .env here!
+.env
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
