@@ -6,6 +6,7 @@ function CreateReservationRequest(props){
     const {newReservation, setPostError} = props;
     const history = useHistory();
     let fetchReturn = null;
+    
      console.log("tet in request component", newReservation)
         useEffect(() => {
           async function createReservationRequest(){
