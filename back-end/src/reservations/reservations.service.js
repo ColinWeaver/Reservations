@@ -1,19 +1,15 @@
 const knex = require("../db/connection");
 
 
-
-// function list() {
-//   return knex("reservations").select("*");
-// }
 function list(date){
-     return knex("reservations").select("*")
-     .where({"reservation_date": date})
-     .orderBy("reservation_time");
-    
+     return knex('reservations').select('*')
+     .where('reservation_date', date)
+     .orderBy('reservation_time');
 }
 
 function create(newReservation){
-  return knex("reservations").insert(newReservation).returning("*").first();
+  console.log(newReservation, "reservation test in create service")
+  return knex("reservations").insert(newReservation).returning("*");
 }
 
 module.exports = {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import { useHistory } from "react-router-dom";
 
 
@@ -6,8 +6,11 @@ function CreateReservationRequest(props){
     const {newReservation, setPostError} = props;
     const history = useHistory();
     let fetchReturn = null;
+
+    const API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+    const url = new URL(`${API_BASE_URL}/reservations`);
     
-     console.log("tet in request component", newReservation)
         useEffect(() => {
           async function createReservationRequest(){
             try {
@@ -19,12 +22,14 @@ function CreateReservationRequest(props){
                 //it will go to catch so set post error variable in both try and catch
               let postRequestOption = {
                 method: 'POST', 
+                credentials: 'same-origin',
                 headers: {'Content-Type': 'application/json'}, 
                 body: JSON.stringify(newReservation)
               }
-              fetchReturn = await fetch("/reservations", postRequestOption);
+              console.log(postRequestOption, "postrequest option test")
+              fetchReturn = await fetch(url, postRequestOption);
               console.log("fetch return", fetchReturn)
-              history.push("/");
+              history.push(`/dashboard?date=${newReservation.reservation_date}`);
             }
             catch(error){
               console.log(error);

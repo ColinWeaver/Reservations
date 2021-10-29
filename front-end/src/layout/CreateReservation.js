@@ -8,7 +8,7 @@ function CreateReservation(){
       const [lastName, setLastName] = useState("");
       const [reservationDate, setReservationDate] = useState(null);
       const [reservationTime, setReservationTime] = useState(null);
-      const [peopleCount, setPeopleCount] = useState(0);
+      const [peopleCount, setPeopleCount] = useState(1);
       const [newReservation, setNewReservation] = useState(null);
       const [postError, setPostError] = useState(null);
      
@@ -129,8 +129,9 @@ function CreateReservation(){
                   <input
                     id="people"
                     type="number"
+                    min="1"
                     name="people"
-                    placeholder="0"
+                    placeholder="1"
                     onChange={changeHandler}
                     value={peopleCount}
                     required
