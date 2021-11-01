@@ -1,42 +1,57 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import CreateReservationRequest from "./CreateReservationRequest";
+import ErrorAlert from "./ErrorAlert"
 
 function CreateReservation(){
       const history = useHistory();
       const [firstName, setFirstName] = useState("");
       const [lastName, setLastName] = useState("");
-      const [reservationDate, setReservationDate] = useState(null);
-      const [reservationTime, setReservationTime] = useState(null);
+      const [reservationDate, setReservationDate] = useState("");
+      const [reservationTime, setReservationTime] = useState("");
       const [peopleCount, setPeopleCount] = useState(1);
-      const [newReservation, setNewReservation] = useState(null);
+      const [newReservation, setNewReservation] = useState("");
       const [postError, setPostError] = useState(null);
-     
-      // console.log("firstName: ", firstName,
-      // "lastName: ", lastName, "date: ", reservationDate, 
-      // "time: ", reservationTime, "people: ", peopleCount);
-   
+      const [mobileNumber, setMobileNumber] = useState("");
+    
+      useEffect((() => {
+        if (postError) {
+          setNewReservation(null);
+        }
+      }),[postError]);
+
+
 
         function submitHandler(event){
           event.preventDefault();
           const reservationObject = {};
+          setPostError(null);
           reservationObject["first_name"] = firstName;
           reservationObject["last_name"] = lastName;
+          reservationObject["mobile_number"] = mobileNumber;
           reservationObject["reservation_date"] = reservationDate;
           reservationObject["reservation_time"] = reservationTime;
-          reservationObject["people"] = peopleCount;
+          reservationObject["people"] = Number(peopleCount);
           setNewReservation(reservationObject);
         }
+      
 
         function changeHandler(event){
           event.preventDefault()
-          console.log("changehandler")
            if (event.target.name === "first_name"){
               setFirstName(event.target.value);
            };
            if (event.target.name === "last_name"){
              setLastName(event.target.value);
            };
+           if (event.target.name === "mobile_number"){
+             if (mobileNumber.length < event.target.value.length){
+              if ((event.target.value.length === 3) || (event.target.value.length === 7)) {
+                event.target.value += "-";
+                }
+             }
+            setMobileNumber(event.target.value);
+           }
            if (event.target.name === "reservation_date"){
             setReservationDate(event.target.value);
           };
@@ -52,23 +67,22 @@ function CreateReservation(){
           history.push('/');
         }
 
-         function errorMessage(){
-          if (postError) return "deconstruct error message";
-          else return null;
-         }
-
+      
+         
          if (newReservation){
             return (
             <CreateReservationRequest 
             newReservation={newReservation} 
-            setPostError={setPostError}/>
+            setPostError={setPostError}
+            postError={postError}/>
             )
          }
 
-          return (
+         return (
             <>
               <h1>Add Reservation</h1>
-              <p>{errorMessage()}</p>
+              {/* <ErrorMessage/> */}
+              <ErrorAlert error={postError}/>
               <form onSubmit={submitHandler}>
                 <label htmlFor="firstName">
                   First Name: <br />
@@ -79,7 +93,7 @@ function CreateReservation(){
                     placeholder="first name"
                     onChange={changeHandler}
                     value={firstName}
-                    required
+                   
                   />
                 </label>
               <br />
@@ -93,7 +107,21 @@ function CreateReservation(){
                     placeholder="last name"
                     onChange={changeHandler}
                     value={lastName}
-                    required
+                    
+                  />
+                </label>
+              <br />
+
+              <label htmlFor="MobileNumber">
+                  Mobile Number: <br />
+                    <input
+                    id="mobileNumber"
+                    type="tel"
+                    name="mobile_number"
+                    onChange={changeHandler}
+                    value={mobileNumber}
+                    placeholder="000-000-0000"
+                    
                   />
                 </label>
               <br />
@@ -106,7 +134,7 @@ function CreateReservation(){
                     name="reservation_date"
                     onChange={changeHandler}
                     value={reservationDate}
-                    required
+                    
                   />
                 </label>
               <br />
@@ -119,7 +147,7 @@ function CreateReservation(){
                     name="reservation_time"
                     onChange={changeHandler}
                     value={reservationTime}
-                    required
+                   
                   />
                 </label>
               <br />
@@ -129,12 +157,10 @@ function CreateReservation(){
                   <input
                     id="people"
                     type="number"
-                    min="1"
                     name="people"
                     placeholder="1"
                     onChange={changeHandler}
                     value={peopleCount}
-                    required
                   />
                 </label>
                 <br />

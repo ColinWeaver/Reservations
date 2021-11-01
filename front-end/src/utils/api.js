@@ -46,6 +46,7 @@ async function fetchJson(url, options, onCancel) {
   } catch (error) {
     if (error.name !== "AbortError") {
       console.error(error.stack);
+      
       throw error;
     }
     return Promise.resolve(onCancel);
@@ -59,12 +60,10 @@ async function fetchJson(url, options, onCancel) {
  */
 
 export async function listReservations(params, signal) {
-  console.log(params, "params test in utils")
   const url = new URL(`${API_BASE_URL}/reservations`);
   Object.entries(params).forEach(([key, value]) =>
     url.searchParams.append(key, value.toString())
   );
-  console.log(url, "url in listReservations util")
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);

@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useLocation} from "react-router-dom";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import { previous } from "../utils/date-time";
-import {today} from "../utils/date-time";
-import {next} from "../utils/date-time";
+import { previous, today, next } from "../utils/date-time";
+
 
 /**
  * Defines the dashboard page.
@@ -18,27 +17,24 @@ function Dashboard({ date }) {
   const history = useHistory();
   const address = useLocation().search;
   const queryDate = new URLSearchParams(address).get('date');
+  if (queryDate) date = queryDate;
   
   function changeDayHandler(config){
     if (config === "previous"){
-      date = previous(date);
+      history.push(`/dashboard?date=${previous(date)}`);
     }
     else if (config === "today"){
-      date = today()
+      history.push(`/dashboard?date=${today()}`);
     }
     else {
-      date = next(date)
+      history.push(`/dashboard?date=${next(date)}`);
     }
-    history.push(`/dashboard?date=${date}`);
   }
+
 
   useEffect(loadDashboard, [date]);
   function loadDashboard() {
-    if (queryDate){
-      if (queryDate !== date){
-        date = queryDate;
-      }
-    }
+    setReservations([])
     const abortController = new AbortController();
     setReservationsError(null);
     listReservations({ date }, abortController.signal)
@@ -47,11 +43,18 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
+  function ReservationsDisplay(){
+    if (reservations.length > 0){
+      return <p>{JSON.stringify(reservations)}</p>
+    }
+    else return null;
+  }
+
   return (
     <main>
       <h1>Dashboard</h1>
       <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date</h4>
+        <h4 className="mb-0">Reservations</h4>
       </div>
       <div>
         <button onClick={() => changeDayHandler("previous")}>Previous</button>
@@ -60,7 +63,10 @@ function Dashboard({ date }) {
       </div>
       <br/>
       <ErrorAlert error={reservationsError} />
-      {JSON.stringify(reservations)}
+      
+      <ReservationsDisplay/>
+     {/* {JSON.stringify(reservations)} */}
+     
     </main>
   );
 }
