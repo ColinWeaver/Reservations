@@ -59,7 +59,6 @@ function reservationDate(req, res, next){
   const reservation = res.locals.reservations;
   const reservationDate = Date.parse(reservation.reservation_date);//note browser issues can
   //result from using parse method
-
   if (!reservationDate){
     next({status: 400, message: 'reservation_date must be valid date and not empty'})
   }
@@ -71,14 +70,17 @@ function validateFutureDate(req, res, next){
 const reservation = res.locals.reservations;
 const reservationDate =  new Date(reservation.reservation_date);
 let currentDate = new Date();
-const resYear = currentDate.getFullYear().toString();
-const resMonth = currentDate.getMonth().toString();
-const resDay = currentDate.getDate().toString();
-currentDate = new Date(resYear, resMonth, resDay);
+const currentYear = currentDate.getFullYear().toString();
+const currentMonth = currentDate.getMonth().toString();
+const currentDay = currentDate.getDate().toString();
+currentDate = new Date(currentYear, currentMonth, currentDay);
 const reservationDateMilliseconds = reservationDate.getTime();
 const currentDateMilliseconds = currentDate.getTime();
 if (reservationDateMilliseconds < currentDateMilliseconds){
   next({status: 400, message: "reservation_date must be in future"})
+}
+if (reservationDateMilliseconds === currentDateMilliseconds){
+  res.locals.equalDates = true;
 }
 res.locals.reservations = reservation;
 next();
@@ -86,9 +88,7 @@ next();
 
 function validateNotTuesday(req, res, next){
   const reservation = res.locals.reservations;
-  console.log(reservation.reservation_date, "date before date object")
   const reservationDate =  new Date(reservation.reservation_date)
-  const offset= reservationDate.getUTCDate()
   const day = reservationDate.getUTCDay()
   if (day === 2){
     next({status: 400, message: "restaurant is closed on Tuesday"})
@@ -97,20 +97,35 @@ function validateNotTuesday(req, res, next){
   next();
 }
 
-
-
 function reservationTime(req, res, next){
   const reservation = res.locals.reservations;
   const reservationTimeHour = parseInt(reservation.reservation_time.substring(0,2));
   const reservationTimeColon = reservation.reservation_time.substring(2,3);
   const reservationTimeMin = parseInt(reservation.reservation_time.substring(3));
+  const currentDate = new Date();//set this current date variable to utc??
+  const currentHour = currentDate.getHours();
+  const currentMinutes = currentDate.getMinutes();
+  
  if ((!reservationTimeHour) || (reservationTimeColon !== ":") || (!reservationTimeMin)){
    next({status: 400, message: "reservation_time invalid"})
  }
+ if (((reservationTimeHour === 10) && (reservationTimeMin <= 30)) || reservationTimeHour < 10){
+   next({status: 400, message: "time must be during open hours"})
+ }
+ if (((reservationTimeHour === 21) && (reservationTimeMin >= 30)) || reservationTimeHour > 21){
+  next({status: 400, message: "time must be during open hours closing close"})
+}
+
+//below condition: maybe have current hour/min in UTC time
+if (res.locals.equalDates === true){
+  if ((reservationTimeHour <= currentHour) && (reservationTimeMin < currentMinutes)){
+     next({status: 400, message: "time and date must be future"});
+  }
+}
   res.locals.reservations = reservation;
   next();
 }
-
+ 
 function people(req, res, next){
   const reservation = res.locals.reservations;
   const people = reservation.people;
