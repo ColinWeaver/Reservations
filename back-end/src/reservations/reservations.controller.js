@@ -5,21 +5,6 @@ const reservationsService = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 
-
-//validation
-// async function dateExists(req, res, next){
-//   const date = req.query.date;
-//   const response = await reservationsService.list(date);
-//   if (response) next();
-//   // if (response.length !== 0) {
-//   //   res.locals.date = date;
-//   //   next();
-//   // }
-//   else {
-//     next({ message: "date doesnt exist", status: 400 })
-//   }
-// }
-
 function hasData(req, res, next){
   const newReservationData = req.body.data;
   if (!newReservationData) next({status: 400, message: 'missing data'});
@@ -72,13 +57,47 @@ const mobileNumber = reservation.mobile_number;
 
 function reservationDate(req, res, next){
   const reservation = res.locals.reservations;
-  const reservationDate = Date.parse(reservation.reservation_date);
+  const reservationDate = Date.parse(reservation.reservation_date);//note browser issues can
+  //result from using parse method
+
   if (!reservationDate){
     next({status: 400, message: 'reservation_date must be valid date and not empty'})
   }
   res.locals.reservations = reservation;
   next();
 }
+
+function validateFutureDate(req, res, next){
+const reservation = res.locals.reservations;
+const reservationDate =  new Date(reservation.reservation_date);
+let currentDate = new Date();
+const resYear = currentDate.getFullYear().toString();
+const resMonth = currentDate.getMonth().toString();
+const resDay = currentDate.getDate().toString();
+currentDate = new Date(resYear, resMonth, resDay);
+const reservationDateMilliseconds = reservationDate.getTime();
+const currentDateMilliseconds = currentDate.getTime();
+if (reservationDateMilliseconds < currentDateMilliseconds){
+  next({status: 400, message: "reservation_date must be in future"})
+}
+res.locals.reservations = reservation;
+next();
+}
+
+function validateNotTuesday(req, res, next){
+  const reservation = res.locals.reservations;
+  console.log(reservation.reservation_date, "date before date object")
+  const reservationDate =  new Date(reservation.reservation_date)
+  const offset= reservationDate.getUTCDate()
+  const day = reservationDate.getUTCDay()
+  if (day === 2){
+    next({status: 400, message: "restaurant is closed on Tuesday"})
+  }
+  res.locals.reservations = reservation;
+  next();
+}
+
+
 
 function reservationTime(req, res, next){
   const reservation = res.locals.reservations;
@@ -120,5 +139,5 @@ async function create(req, res) {
 
 module.exports = {
   list: [asyncErrorBoundary(list)],
-  create: [hasData, hasProperties, firstName, lastName, mobileNumber, reservationTime, reservationDate, people, asyncErrorBoundary(create)]
+  create: [hasData, hasProperties, firstName, lastName, mobileNumber, reservationDate, validateFutureDate, validateNotTuesday, reservationTime, people, asyncErrorBoundary(create)]
 };
