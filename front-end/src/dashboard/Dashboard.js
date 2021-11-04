@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation} from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { previous, today, next } from "../utils/date-time";
@@ -12,11 +12,13 @@ import { previous, today, next } from "../utils/date-time";
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
+
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const history = useHistory();
   const address = useLocation().search;
   const queryDate = new URLSearchParams(address).get('date');
+  const [reservationId, setReservationId] = useState(null);
   if (queryDate) date = queryDate;
   
   function changeDayHandler(config){
@@ -43,9 +45,29 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
+  function TablesDisplay(){
+   return <p>Table list here</p>
+  }
+  
+  //load tables here and render here and pass in to seat reservation as well
   function ReservationsDisplay(){
     if (reservations.length > 0){
-      return <p>{JSON.stringify(reservations)}</p>
+     return reservations.map((reservation) =>{
+        return (
+        <div>
+          <h4>Reservation {reservation.reservation_id}</h4>
+          <p>Last Name: {reservation.last_name}</p>
+          <p>First Name: {reservation.first_name}</p>
+          <p>Mobile Number: {reservation.mobile_number}</p>
+          <p> Date: {reservation.reservation_date}</p>
+          <p>Time: {reservation.reservation_time}</p>
+          <p>People: {reservation.people}</p>
+          <a href={`/reservations/${reservation.reservation_id}/seat`}>
+          <button onClick={() => setReservationId(reservation.reservation_id)}>Seat</button>
+          </a>
+        </div>
+        )
+     })
     }
     else return null;
   }
@@ -63,9 +85,8 @@ function Dashboard({ date }) {
       </div>
       <br/>
       <ErrorAlert error={reservationsError} />
-      
       <ReservationsDisplay/>
-     {/* {JSON.stringify(reservations)} */}
+      <TablesDisplay/>
      
     </main>
   );
