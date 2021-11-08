@@ -1,5 +1,4 @@
 exports.seed = function (knex) {
-    //to do: check if ok to seed with json. use jsonparse method maybe?
 return knex("reservations").insert([
     {
       "first_name": "Rick",

@@ -1,7 +1,7 @@
 import React, {useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import CreateTableRequest from "./CreateTableRequest";
 import ErrorAlert from "./ErrorAlert"
+import Requests from "./Requests";
 
 function CreateTable(){
       const history = useHistory();
@@ -9,6 +9,7 @@ function CreateTable(){
       const [capacity, setTableCapacity] = useState(1);
       const [newTable, setNewTable] = useState(null);
       const [postError, setPostError] = useState(null);
+      let requestConfig;
     
       useEffect((() => {
         if (postError) {
@@ -39,23 +40,32 @@ function CreateTable(){
           history.push('/');
         }
 
-
-         if (newTable){
-            return (
-            <CreateTableRequest 
-            newTable={newTable} 
-            setPostError={setPostError}
-            postError={postError}/>
-            );
-         };
+        let postRequestOption = {
+          method: 'POST', 
+          credentials: 'same-origin',
+          headers: {'Content-Type': 'application/json'}, 
+          body: JSON.stringify({ data: newTable })
+        }
+       if (newTable){
+       requestConfig = {
+       option: postRequestOption,
+       redirectURL: `/dashboard`,
+       fetchURL: "/tables"
+     }
+      return (
+      <Requests
+      requestConfig={requestConfig}
+      setPostError={setPostError}
+      />
+      )
+   }
 
          return (
             <>
               <h1>Add Table</h1>
-
               <ErrorAlert error={postError}/>
               <form onSubmit={submitHandler}>
-                <label htmlFor="firstName">
+                <label htmlFor="table_name">
                   Table Name: <br />
                   <input
                     id="capacity"
@@ -64,17 +74,16 @@ function CreateTable(){
                     placeholder="table name.."
                     onChange={changeHandler}
                     value={tableName}
-                   
                   />
                 </label>
               <br />
-              <label htmlFor="firstName">
+              <label htmlFor="capacity">
                   Capacity: <br />
                   <input
                     id="capacity"
                     type="number"
                     name="capacity"
-                    placeholder="number"
+                    placeholder="capacity"
                     onChange={changeHandler}
                     value={capacity}
                   />

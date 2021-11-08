@@ -1,6 +1,6 @@
 import React, {useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import CreateReservationRequest from "./CreateReservationRequest";
+import Requests from "./Requests";
 import ErrorAlert from "./ErrorAlert"
 
 function CreateReservation(){
@@ -13,14 +13,13 @@ function CreateReservation(){
       const [newReservation, setNewReservation] = useState("");
       const [postError, setPostError] = useState(null);
       const [mobileNumber, setMobileNumber] = useState("");
-    
+      let requestConfig;
+
       useEffect((() => {
         if (postError) {
           setNewReservation(null);
         }
       }),[postError]);
-
-
 
         function submitHandler(event){
           event.preventDefault();
@@ -68,13 +67,23 @@ function CreateReservation(){
         }
 
       
-         
+         let postRequestOption = {
+                method: 'POST', 
+                credentials: 'same-origin',
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify({ data: newReservation })
+              }
          if (newReservation){
+           requestConfig = {
+             option: postRequestOption,
+             redirectURL: `/dashboard?date=${newReservation.reservation_date}`,
+             fetchURL: "/reservations"
+           }
             return (
-            <CreateReservationRequest 
-            newReservation={newReservation} 
+            <Requests
+            requestConfig={requestConfig}
             setPostError={setPostError}
-            postError={postError}/>
+            />
             )
          }
 

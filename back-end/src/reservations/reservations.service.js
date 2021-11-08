@@ -14,5 +14,4 @@ function create(newReservation){
 module.exports = {
     list,
     create,
-   
   };

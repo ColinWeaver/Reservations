@@ -68,12 +68,23 @@ function reservationDate(req, res, next){
 
 function validateFutureDate(req, res, next){
 const reservation = res.locals.reservations;
-const reservationDate =  new Date(reservation.reservation_date);
+let reservationDate =  new Date(reservation.reservation_date);
+const reservationYear = reservationDate.getUTCFullYear().toString();
+const reservationMonth = reservationDate.getUTCMonth().toString();
+const reservationDay = reservationDate.getUTCDate().toString();
 let currentDate = new Date();
 const currentYear = currentDate.getFullYear().toString();
 const currentMonth = currentDate.getMonth().toString();
 const currentDay = currentDate.getDate().toString();
+
+// if ((reservationYear < currentYear) || 
+// (reservationMonth < currentMonth) || 
+// (reservationDay < currentDay)){
+//   console.log(reservationDate, currentDate, 'test in condition')
+//   next({status: 400, message: "reservation_date must be in future"})
+// }
 currentDate = new Date(currentYear, currentMonth, currentDay);
+reservationDate = new Date(reservationYear, reservationMonth, reservationDay);
 const reservationDateMilliseconds = reservationDate.getTime();
 const currentDateMilliseconds = currentDate.getTime();
 if (reservationDateMilliseconds < currentDateMilliseconds){
@@ -118,7 +129,7 @@ function reservationTime(req, res, next){
 
 //below condition: maybe have current hour/min in UTC time
 if (res.locals.equalDates === true){
-  if ((reservationTimeHour <= currentHour) && (reservationTimeMin < currentMinutes)){
+  if ((reservationTimeHour < currentHour) ||((reservationTimeHour === currentHour) && (reservationTimeMin < currentMinutes))){
      next({status: 400, message: "time and date must be future"});
   }
 }

@@ -3,6 +3,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { previous, today, next } from "../utils/date-time";
+import Requests from "../layout/Requests";
 
 
 /**
@@ -12,16 +13,19 @@ import { previous, today, next } from "../utils/date-time";
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
-
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const history = useHistory();
   const address = useLocation().search;
   const queryDate = new URLSearchParams(address).get('date');
   const [reservationId, setReservationId] = useState(null);
+  const [tables, setTables] = useState([]);
+  const [postError, setPostError] = useState(null);
+
   if (queryDate) date = queryDate;
   
   function changeDayHandler(config){
+    console.log(date, 'changeHandlerdate test')
     if (config === "previous"){
       history.push(`/dashboard?date=${previous(date)}`);
     }
@@ -32,6 +36,9 @@ function Dashboard({ date }) {
       history.push(`/dashboard?date=${next(date)}`);
     }
   }
+
+  //have useeffect for tables whenever date changes, or maybe reservations changes
+  
 
 
   useEffect(loadDashboard, [date]);
@@ -45,11 +52,46 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
-  function TablesDisplay(){
-   return <p>Table list here</p>
-  }
   
-  //load tables here and render here and pass in to seat reservation as well
+  if (tables.length < 1){
+    let requestConfig = {
+      fetchURL: '/tables',
+      redirectURL: '/dashboard'
+    }
+    return <Requests 
+    requestConfig={requestConfig} 
+    setPostError={setPostError} 
+    setTables={setTables}
+    />
+  }
+ // date = queryDate
+
+  function TablesDisplay(){
+   let tableArray;
+   if (tables.data){
+     tableArray = tables.data
+   }
+   if ((tableArray) && (tableArray.length > 0)) {
+   //  date = queryDate;
+     
+    return tableArray.map((table) => {
+      let tableStatus = "Free"
+      if (table.reservation_id){
+        tableStatus = "Occupied"
+      }
+      return (
+        <div>
+        <h4>Table: {table.table_id}</h4>
+        <p data-table-id-status={table.table_id}>Table Status: {tableStatus}</p>
+        <p>Name: {table.table_name}</p>
+        <p>Capacity: {table.capacity}</p>
+        </div>
+      )
+    })
+  }
+  else return null;
+}
+  
   function ReservationsDisplay(){
     if (reservations.length > 0){
      return reservations.map((reservation) =>{
@@ -63,7 +105,7 @@ function Dashboard({ date }) {
           <p>Time: {reservation.reservation_time}</p>
           <p>People: {reservation.people}</p>
           <a href={`/reservations/${reservation.reservation_id}/seat`}>
-          <button onClick={() => setReservationId(reservation.reservation_id)}>Seat</button>
+          <button>Seat</button>
           </a>
         </div>
         )
@@ -85,6 +127,7 @@ function Dashboard({ date }) {
       </div>
       <br/>
       <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={postError}/>
       <ReservationsDisplay/>
       <TablesDisplay/>
      
