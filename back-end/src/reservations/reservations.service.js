@@ -11,7 +11,20 @@ function create(newReservation){
   return knex('reservations').insert(newReservation).returning('*');
 }
 
+function read(reservationId){
+  return knex('reservations').select("*")
+  .where('reservation_id', reservationId)
+  .first()
+}
+
+function update(reservationId, status){
+  return knex('reservations').select("*")
+  .where('reservation_id', reservationId)
+  //.update({status: status})
+}
 module.exports = {
     list,
     create,
+    read,
+    update
   };

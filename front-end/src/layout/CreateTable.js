@@ -6,7 +6,7 @@ import Requests from "./Requests";
 function CreateTable(){
       const history = useHistory();
       const [tableName, setTableName] = useState("");
-      const [capacity, setTableCapacity] = useState(1);
+      const [capacity, setTableCapacity] = useState(null);
       const [newTable, setNewTable] = useState(null);
       const [postError, setPostError] = useState(null);
       let requestConfig;
@@ -22,7 +22,7 @@ function CreateTable(){
           setPostError(null);
           const tableObject = {};
           tableObject["table_name"] = tableName;
-          tableObject["capacity"] = capacity;
+          tableObject["capacity"] = Number(capacity);
           setNewTable(tableObject);
         };
       
@@ -37,7 +37,7 @@ function CreateTable(){
         };
 
         function cancelHandler(){
-          history.push('/');
+          history.goBack();
         }
 
         let postRequestOption = {
@@ -68,7 +68,7 @@ function CreateTable(){
                 <label htmlFor="table_name">
                   Table Name: <br />
                   <input
-                    id="capacity"
+                    id="table_name"
                     type="text"
                     name="table_name"
                     placeholder="table name.."
@@ -90,7 +90,7 @@ function CreateTable(){
                 </label>
 
 
-                <button type="cancel" onClick={cancelHandler}>Cancel
+                <button type="cancel" name="cancel" onClick={cancelHandler}>Cancel
                 </button>
                 {"  "}
                 <button type="submit" name="submit">

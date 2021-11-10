@@ -9,8 +9,9 @@ import ErrorAlert from "./ErrorAlert"
      const [postError, setPostError] = useState(null);
      const useParam = useParams();
      const reservationId = useParam.reservation_id;
-     const [tables, setTables] = useState([])
-     const [optionValue, setOptionValue] = useState(null)
+     const [tables, setTables] = useState([]);
+     const [optionValue, setOptionValue] = useState(null);
+
      useEffect((() => {
         if (postError) {
           setUpdatedTable(null);
@@ -57,6 +58,7 @@ import ErrorAlert from "./ErrorAlert"
 
 //loads tables for table form
   if (tables.length < 1){
+    console.log("test in seat reservation load tables condition")
     let requestConfig = {
       fetchURL: '/tables',
       redirectURL: `/reservations/${reservationId}/seat`
@@ -65,22 +67,18 @@ import ErrorAlert from "./ErrorAlert"
     requestConfig={requestConfig} 
     setPostError={setPostError} 
     setTables={setTables}
+    tables={tables}
     />
   }
  
- 
 
   function TablesForm(){
-   let tableArray;
-   if (tables.data){
-     tableArray = tables.data
-   }
-   if ((tableArray) && (tableArray.length > 0)) {
-     setOptionValue(tableArray[0].table_id)
+  if (tables.length > 0) {
+    if (!optionValue) setOptionValue(tables[0].table_id)
      return (
     <form onSubmit={submitHandler}>
     <select name="table_id" value={optionValue} onChange={changeHandler}>
-    {tableArray.map((table) => {
+    {tables.map((table) => {
       return (
                 <option 
                 value={table.table_id}>

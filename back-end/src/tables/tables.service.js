@@ -25,11 +25,19 @@ function readReservation(reservationId){
   .where({reservation_id: reservationId})
 }
 
+function destroy(tableId){
+  console.log(tableId, 'tableid test in destroy service')
+  return knex("tables").select("reservation_id")
+  .where({table_id: tableId})
+  .update({reservation_id: null})
+}
+
 module.exports = {
     list,
     create,
     update,
     readTable,
-    readReservation
+    readReservation,
+    destroy
    
   };

@@ -163,7 +163,25 @@ async function create(req, res) {
    res.status(201).json({ data: response[0] });
 }
 
+async function read(req, res, next){
+  const reservationId = req.params.reservation_id;
+  const reservation = await reservationsService.read(reservationId);
+  console.log(reservation, "reservation test in read")
+  if (!reservation) {
+    next({status: 404, message:  `invalid reservation_id: ${reservationId}`})
+  }
+  res.json({data: reservation});
+}
+
+async function update(req, res, next){
+  const reservationId = req.params.reservatino_id;
+  const status = req.body.data.status;
+  const response = await reservationsService.update(reservationId, status);
+  res.json({data: response})
+}
 module.exports = {
   list: [asyncErrorBoundary(list)],
-  create: [hasData, hasProperties, firstName, lastName, mobileNumber, reservationDate, validateFutureDate, validateNotTuesday, reservationTime, people, asyncErrorBoundary(create)]
+  create: [hasData, hasProperties, firstName, lastName, mobileNumber, reservationDate, validateFutureDate, validateNotTuesday, reservationTime, people, asyncErrorBoundary(create)],
+  read: [asyncErrorBoundary(read)],
+  update: [asyncErrorBoundary(update)]
 };
