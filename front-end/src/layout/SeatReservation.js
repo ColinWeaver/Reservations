@@ -76,13 +76,14 @@ import ErrorAlert from "./ErrorAlert"
   if (tables.length > 0) {
     if (!optionValue) setOptionValue(tables[0].table_id)
      return (
+       <>
     <form onSubmit={submitHandler}>
     <select name="table_id" value={optionValue} onChange={changeHandler}>
     {tables.map((table) => {
       return (
                 <option 
                 value={table.table_id}>
-                {table.table_name}-{table.table_capacity}
+                {table.table_name} - {table.capacity}
                 </option>
       )
     })}
@@ -94,6 +95,7 @@ import ErrorAlert from "./ErrorAlert"
         Submit
       </button>
     </form>
+    </>
      )
   }
   else return null;

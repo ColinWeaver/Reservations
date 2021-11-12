@@ -11,6 +11,8 @@ function hasData(req, res, next){
   res.locals.reservations = newReservationData;
   next();
 }
+
+//---------------------validation for POST--------------------------------
 function hasProperties(req, res, next){
   const newReservationData = res.locals.reservations;
   if (!newReservationData) next({status: 400, message: 'missing data'});
@@ -76,13 +78,6 @@ let currentDate = new Date();
 const currentYear = currentDate.getFullYear().toString();
 const currentMonth = currentDate.getMonth().toString();
 const currentDay = currentDate.getDate().toString();
-
-// if ((reservationYear < currentYear) || 
-// (reservationMonth < currentMonth) || 
-// (reservationDay < currentDay)){
-//   console.log(reservationDate, currentDate, 'test in condition')
-//   next({status: 400, message: "reservation_date must be in future"})
-// }
 currentDate = new Date(currentYear, currentMonth, currentDay);
 reservationDate = new Date(reservationYear, reservationMonth, reservationDay);
 const reservationDateMilliseconds = reservationDate.getTime();
@@ -126,8 +121,6 @@ function reservationTime(req, res, next){
  if (((reservationTimeHour === 21) && (reservationTimeMin >= 30)) || reservationTimeHour > 21){
   next({status: 400, message: "time must be during open hours closing close"})
 }
-
-//below condition: maybe have current hour/min in UTC time
 if (res.locals.equalDates === true){
   if ((reservationTimeHour < currentHour) ||((reservationTimeHour === currentHour) && (reservationTimeMin < currentMinutes))){
      next({status: 400, message: "time and date must be future"});
@@ -150,11 +143,66 @@ function people(req, res, next){
   next();
 }
 
+function status(req, res, next){
+  const reservation = res.locals.reservations;
+  if (reservation.status === "seated" || reservation.status === "finished"){
+    next({status: 400, message: `status cannot be ${reservation.status}`})
+  }
+  next();
+}
+//---------------------------Validation for UPDATE Status-------------------------------------
+//404 for nonexistant reservationid
+//400 for unknown status
+//400 if status currently finished
+
+async function validateReservationId(req, res, next){
+  const reservationId = req.params.reservation_id;
+  const reservation = await reservationsService.read(reservationId);
+  if (!reservation){
+    next({status: 404, message: `invalid reservation_id: ${reservationId}`});
+  }
+  res.locals.reservation = reservation;
+  next();
+};
+
+function statusUpdate(req, res, next){
+  
+  const data = req.body.data;
+  const status = data.status;
+  console.log('test in statusUpdate,',data, status )
+  if (status === "unknown"){
+    next({status: 400, message: `unknown status`});
+  };
+  res.locals.data = data;
+  res.locals.status = status;
+  next();
+};
+
+function finishedStatus(req, res, next){
+  const reservation = res.locals.reservation;
+  console.log(reservation, 'reservation test in finished status')
+  if (reservation.status === "finished"){
+    next({status: 400, message: `current status cannot be finished`});
+  }
+    next();
+}
+
 //----------------------------------------------------------------
 
 async function list(req, res) {
-  let date = req.query.date;
-  res.json({ data: await reservationsService.list(date) });
+  const date = req.query.date;
+  const mobileNumber = req.query.mobile_number;
+  if (date){
+  const response = await reservationsService.listByDate(date);
+  res.json({data: response })
+  }
+  if (mobileNumber){
+    console.log("test in controller list")
+    const response = await reservationsService.listByNumber(mobileNumber)
+    console.log(response)
+    res.json({data: response})
+  }
+  
 }
 
 async function create(req, res) {
@@ -166,7 +214,6 @@ async function create(req, res) {
 async function read(req, res, next){
   const reservationId = req.params.reservation_id;
   const reservation = await reservationsService.read(reservationId);
-  console.log(reservation, "reservation test in read")
   if (!reservation) {
     next({status: 404, message:  `invalid reservation_id: ${reservationId}`})
   }
@@ -179,9 +226,11 @@ async function update(req, res, next){
   const response = await reservationsService.update(reservationId, status);
   res.json({data: response})
 }
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
-  create: [hasData, hasProperties, firstName, lastName, mobileNumber, reservationDate, validateFutureDate, validateNotTuesday, reservationTime, people, asyncErrorBoundary(create)],
+  create: [hasData, hasProperties, firstName, lastName, mobileNumber, reservationDate, validateFutureDate, validateNotTuesday, reservationTime, people, status, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(read)],
-  update: [asyncErrorBoundary(update)]
+  updateStatus: [asyncErrorBoundary(validateReservationId), statusUpdate, finishedStatus, asyncErrorBoundary(update)],
+  update
 };

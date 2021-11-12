@@ -68,7 +68,6 @@ async function tableNotOccupied(req, res, next){
   if (table[0].reservation_id){
     next({status: 400, message: "table cannot be occupied must be free"})
   }
-  //res.locals.data = data;
   res.locals.table = table[0];
   res.locals.tableId = tableId;
   next();
@@ -89,19 +88,24 @@ next();
 }
 
 
-async function capacityUpdate(req, res, next){
-  console.log(res.locals, 'res.locals in capacity')
+function capacityUpdate(req, res, next){
 const reservation = res.locals.reservation;
 const reservationSize = reservation.people;
 const table = res.locals.table;
 const tableCapacity = table.capacity;
-console.log(tableCapacity, reservationSize, 'test in capacityupdate')
 if (tableCapacity < reservationSize){
   next({status: 400, message: 'table capacity cant be less than reservation size '})
 }
 next();
 }
 
+function alreadySeated(req, res, next){
+  const reservation = res.locals.reservation;
+  if (reservation.status === "seated"){
+    next({status: 400, message: `reservation is already seated`})
+  }
+  next();
+}
 //----------------------------------------------------------------
 
 //destroy validation----
@@ -146,6 +150,6 @@ async function destroy(req, res){
 module.exports = {
   list: [asyncErrorBoundary(list)],
   create: [hasData, hasPropertiesCreate, capacity, tableName, asyncErrorBoundary(create)],
-  update: [hasData, hasPropertiesUpdate, asyncErrorBoundary(tableNotOccupied), asyncErrorBoundary(validReservation), asyncErrorBoundary(capacityUpdate), asyncErrorBoundary(update)],
+  update: [hasData, hasPropertiesUpdate, asyncErrorBoundary(tableNotOccupied), asyncErrorBoundary(validReservation), capacityUpdate, alreadySeated, asyncErrorBoundary(update)],
   destroy: [asyncErrorBoundary(notOccupiedDestroy), asyncErrorBoundary(destroy)]
 };

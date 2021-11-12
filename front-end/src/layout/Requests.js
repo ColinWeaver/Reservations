@@ -11,7 +11,9 @@ function Requests(props){
       setReservations, 
       setReRender,
       setReservationStatus,
-      reservationStatus
+      reservationStatus,
+      setReservationList,
+      reservationList
 
     } = props;
     const history = useHistory();
@@ -48,6 +50,7 @@ function Requests(props){
                 let errorObject = { message: errorMessage };
                 setPostError(errorObject)
               }
+
               else {
                 console.log('request test 2')
                 fetchReturn = await fetchReturn.json();
@@ -62,9 +65,12 @@ function Requests(props){
                     setTables([])
                   }
                 }
-                if (setReservations) {
-                  console.log('request test 5')
-                  setReservations(fetchReturn);
+                if (setReservationList) {
+                  if (!reservationList){
+                  console.log('request test 5', fetchReturn)
+                  setReservationList(fetchReturn.data);
+                  //history.push(redirectURL);
+                  }
                 }
                // if (setReRender) setReRender(true);
 

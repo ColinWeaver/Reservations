@@ -29,18 +29,14 @@ function Dashboard({ date }) {
 
   if (queryDate) {
     date = queryDate;
-    console.log('test in reset date to query date')
   }
 
-  console.log(date, queryDate , 'date test')
  
 //to trigger reload of tables
 useEffect(() => {
   //   window.location.reload(false);
   setTableId(null);
   setDeleteSeating(false);
-  
-  
   }, [tables])
 
 
@@ -69,7 +65,6 @@ useEffect(() => {
     else {
       redirectURL = `/dashboard`
     }
-    console.log('test in tables load', tables)
     let requestConfig = {
       fetchURL: '/tables',
       redirectURL: redirectURL
@@ -192,7 +187,7 @@ function changeDayHandler(config){
       return (
         <div>
         <h4>Table: {table.table_id}</h4>
-        <p data-table-id-status={table.table_id}>Table Status: {tableStatus}</p>
+        <p data-table-id-status={table.table_id}> {tableStatus}</p>
         <p>Name: {table.table_name}</p>
         <p>Capacity: {table.capacity}</p>
         <button data-table-id-finish={table.table_id} value={table.table_id} onClick={finishTableHandler}>Finish</button>

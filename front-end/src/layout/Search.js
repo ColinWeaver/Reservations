@@ -1,21 +1,56 @@
-import React, {useEffect, useState } from "react";
-//import { useHistory, useParams } from "react-router-dom";
-//import Requests from "./Requests";
-// import ErrorAlert from "./ErrorAlert"
+import React, { useState } from "react";
+import Requests from "./Requests";
+ import ErrorAlert from "./ErrorAlert"
 import DisplayReservations from "./DisplayReservations"
 
 function Search(){
-const [reservations, setReservations] = useState([]);
-//mobilenumber state var
-//change and submit handlers
-//fetch to /reservations?mobile_phone={mobileNumber}
-//use given service function 
-//write controller list for if query since its still /reservations 
+const [reservationList, setReservationList] = useState(null);
+const [mobileNumber, setMobileNumber] = useState(null);
+const [postError, setPostError] = useState(null);
+const [submitNumber, setSubmitNumber] = useState(null);
+
+function changeHandler(event){
+  event.preventDefault();
+  setMobileNumber(event.target.value);
+  console.log('test in changehandler', mobileNumber, 'mobile number')
+}
+
+function submitHandler(event){
+event.preventDefault();
+setSubmitNumber((submitNumber) => submitNumber = mobileNumber);
+setReservationList(null);
+}
+
+//if reservationList.length === 0 then render message "No reservations found."
+
+function NoReservations(){
+  if (reservationList && reservationList.length === 0){
+    return <p>No reservations found.</p>
+  }
+  else return null;
+}
+
+if (submitNumber && (!reservationList) && !postError){
+let requestConfig = {
+redirectURL: `/search`,
+fetchURL: `/reservations?mobile_number=${submitNumber}`
+}
+return (
+<Requests
+requestConfig={requestConfig}
+setPostError={setPostError}
+setReservationList={setReservationList}
+reservationList={reservationList}
+/>
+)
+}
+
+
 
     return (
         <>
-          <h1>Search</h1>
-          {/* <ErrorAlert error={postError}/> */}
+          <h1>Search Reservations </h1>
+          <ErrorAlert error={postError}/>
           <form onSubmit={submitHandler}>
             <label htmlFor="table_name">
               Table Name: <br />
@@ -25,7 +60,7 @@ const [reservations, setReservations] = useState([]);
                 name="mobile_number"
                 placeholder="Enter a customers phone number.."
                 onChange={changeHandler}
-                value={tableName}
+                value={mobileNumber}
               />
             </label>
           <br />
@@ -37,11 +72,10 @@ const [reservations, setReservations] = useState([]);
               Find
             </button>
           </form>
-
           <br />
-          
           <div>
-              <DisplayReservations reservations={reservations}/>
+              <DisplayReservations reservations={reservationList}/>
+              <NoReservations/>
           </div>
         </>
       )
