@@ -1,5 +1,5 @@
 import React, {useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Requests from "./Requests";
 import ErrorAlert from "./ErrorAlert"
 
@@ -13,7 +13,12 @@ function EditReservation(){
       const [newReservation, setNewReservation] = useState("");
       const [postError, setPostError] = useState(null);
       const [mobileNumber, setMobileNumber] = useState("");
-      let requestConfig;
+      const useParam = useParams();
+      const reservationId = useParam.reservation_id;
+      const [reservation, setReservation] = useState(null);//load current reservation
+      const [formValuesSet, setFormValuesSet] = useState(false);
+      //load reservations data with read request
+      //set each state form var equal to data 
 
       useEffect((() => {
         if (postError) {
@@ -21,8 +26,62 @@ function EditReservation(){
         }
       }),[postError]);
 
+
+  
+//get request for initial data
+if (!reservation ){
+  let requestConfig = {
+  redirectURL: `/reservations/${reservationId}/edit`,
+  fetchURL: `/reservations/${reservationId}`
+  }
+  return (
+  <Requests
+  requestConfig={requestConfig}
+  setPostError={setPostError}
+  setReservationList={setReservation}
+  reservationList={reservation}
+  />
+  )
+  }
+
+   //post request 
+if (newReservation){
+  console.log(newReservation, 'newreservation test in put request')
+  let postRequestOption = {
+    method: 'PUT', 
+    credentials: 'same-origin',
+    headers: {'Content-Type': 'application/json'}, 
+    body: JSON.stringify({ data: newReservation })
+  }
+let requestConfig = {
+ option: postRequestOption,
+ fetchURL: `/reservations/${reservationId}`
+}
+return (
+<Requests
+requestConfig={requestConfig}
+setPostError={setPostError}
+/>
+)
+}
+//-------------------------------------------------------------------------
+
+  //set form values
+  if (reservation && !formValuesSet){
+    setFirstName(reservation.first_name);
+    setLastName(reservation.last_name);
+    setMobileNumber(reservation.mobile_number);
+    setReservationDate(reservation.reservation_date);
+    setReservationTime(reservation.reservation_time);
+    setPeopleCount(reservation.people);
+    setReservationDate(reservation.reservation_date);
+    setFormValuesSet(true);
+  }
+//---------------------------------------------------------------------------
+  
         function submitHandler(event){
           event.preventDefault();
+          console.log('test in submit')
           const reservationObject = {};
           setPostError(null);
           reservationObject["first_name"] = firstName;
@@ -36,6 +95,7 @@ function EditReservation(){
       
 
         function changeHandler(event){
+          console.log('change handler')
           event.preventDefault()
            if (event.target.name === "first_name"){
               setFirstName(event.target.value);
@@ -63,34 +123,14 @@ function EditReservation(){
         }
 
         function cancelHandler(){
-          history.push("/")
+          history.goBack();
         }
 
-      
-         let postRequestOption = {
-                method: 'POST', 
-                credentials: 'same-origin',
-                headers: {'Content-Type': 'application/json'}, 
-                body: JSON.stringify({ data: newReservation })
-              }
-         if (newReservation){
-           console.log("test in config for fetch create res, ", newReservation)
-           requestConfig = {
-             option: postRequestOption,
-             redirectURL: `/dashboard?date=${newReservation.reservation_date}`,
-             fetchURL: "/reservations"
-           }
-            return (
-            <Requests
-            requestConfig={requestConfig}
-            setPostError={setPostError}
-            />
-            )
-         }
+     
 
          return (
             <>
-              <h1>Add Reservation</h1>
+              <h1>Edit Reservation</h1>
               {/* <ErrorMessage/> */}
               <ErrorAlert error={postError}/>
               <form onSubmit={submitHandler}>

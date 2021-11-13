@@ -5,6 +5,9 @@ const reservationsService = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 
+
+
+//---------------------validation for CREATE and UPDATE--------------------------------
 function hasData(req, res, next){
   const newReservationData = req.body.data;
   if (!newReservationData) next({status: 400, message: 'missing data'});
@@ -12,7 +15,6 @@ function hasData(req, res, next){
   next();
 }
 
-//---------------------validation for POST--------------------------------
 function hasProperties(req, res, next){
   const newReservationData = res.locals.reservations;
   if (!newReservationData) next({status: 400, message: 'missing data'});
@@ -111,8 +113,12 @@ function reservationTime(req, res, next){
   const currentDate = new Date();//set this current date variable to utc??
   const currentHour = currentDate.getHours();
   const currentMinutes = currentDate.getMinutes();
-  
- if ((!reservationTimeHour) || (reservationTimeColon !== ":") || (!reservationTimeMin)){
+
+  //18:00 not passing valid time test??
+  //00 is falsy!!! cant do boolean test for min or hour!!
+  console.log("test for using includes", reservation.reservation_time, reservationTimeMin, reservationTimeMin > 0)
+ if ((!reservationTimeHour && reservationTimeHour > 0) || (reservationTimeColon !== ":") || (!reservationTimeMin && reservationTimeMin > 0)){
+   console.log('invalidreservation time tst,', reservation.reservation_time, reservationTimeHour, reservationTimeColon, reservationTimeMin)
    next({status: 400, message: "reservation_time invalid"})
  }
  if (((reservationTimeHour === 10) && (reservationTimeMin <= 30)) || reservationTimeHour < 10){
@@ -150,7 +156,7 @@ function status(req, res, next){
   }
   next();
 }
-//---------------------------Validation for UPDATE Status-------------------------------------
+//---------------------------Validation for updateStatus-------------------------------------
 //404 for nonexistant reservationid
 //400 for unknown status
 //400 if status currently finished
@@ -166,7 +172,6 @@ async function validateReservationId(req, res, next){
 };
 
 function statusUpdate(req, res, next){
-  
   const data = req.body.data;
   const status = data.status;
   console.log('test in statusUpdate,',data, status )
@@ -187,8 +192,18 @@ function finishedStatus(req, res, next){
     next();
 }
 
-//----------------------------------------------------------------
+//-----------------------------------------------------------------------
+async function validReservation(req, res, next){
+const reservationId = req.params.reservation_id;
+const reservation = await reservationsService.read(reservationId);
+if (!reservation) {
+next({status: 404, message: `reservation ${reservationId} doesn't exist`})
+}
+res.locals.reservationId = reservationId;
+next();
 
+}
+//--------------------------validation for update------------------------
 async function list(req, res) {
   const date = req.query.date;
   const mobileNumber = req.query.mobile_number;
@@ -215,22 +230,34 @@ async function read(req, res, next){
   const reservationId = req.params.reservation_id;
   const reservation = await reservationsService.read(reservationId);
   if (!reservation) {
-    next({status: 404, message:  `invalid reservation_id: ${reservationId}`})
+    console.log(reservation, 'rest in reservation read ')
+    next({status: 404, message: `invalid reservation_id: ${reservationId}`})
   }
   res.json({data: reservation});
 }
 
-async function update(req, res, next){
-  const reservationId = req.params.reservatino_id;
+async function updateStatus(req, res){
+  const reservationId = req.params.reservation_id;
   const status = req.body.data.status;
-  const response = await reservationsService.update(reservationId, status);
+  const response = await reservationsService.updateStatus(reservationId, status);
   res.json({data: response})
+}
+
+
+async function update(req, res){
+  console.log('test in update reservation controller')
+  const reservationId = res.locals.reservationId;
+  const reservation = res.locals.reservations;
+  console.log(reservationId, reservation, 'update');
+  await reservationsService.update(reservationId, reservation);
+  res.json({ data: reservation });
+
 }
 
 module.exports = {
   list: [asyncErrorBoundary(list)],
   create: [hasData, hasProperties, firstName, lastName, mobileNumber, reservationDate, validateFutureDate, validateNotTuesday, reservationTime, people, status, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(read)],
-  updateStatus: [asyncErrorBoundary(validateReservationId), statusUpdate, finishedStatus, asyncErrorBoundary(update)],
-  update
+  updateStatus: [asyncErrorBoundary(validateReservationId), statusUpdate, finishedStatus, asyncErrorBoundary(updateStatus)],
+  update:[asyncErrorBoundary(validReservation), hasData, hasProperties, firstName, lastName, mobileNumber, reservationDate, validateFutureDate, validateNotTuesday, reservationTime, people, status, asyncErrorBoundary(update)]
 };

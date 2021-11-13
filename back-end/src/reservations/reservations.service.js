@@ -8,7 +8,6 @@ function listByDate(date){
 }
 
 function listByNumber(mobile_number){
-  console.log('test in servie for list')
   return knex("reservations")
   .whereRaw("translate(mobile_number, '() -', '') like ?", `%${mobile_number.replace(/\D/g, "")}%`)  
   .orderBy("reservation_date");
@@ -24,13 +23,20 @@ function read(reservationId){
   .first()
 }
 
-//STORY 6 update status in reservations 
-//need transaction to sink reservations with tables
-function update(reservationId, status){
+function update(reservationId, updatedReservation){
+  console.log(reservationId, updatedReservation, 'testin service update')
+return knex('reservations').select("*")
+.where('reservation_id', reservationId)
+.update(updatedReservation)
+}
+
+//story 6
+function updateStatus(reservationId, status){
   return knex('reservations').select("*")
   .where('reservation_id', reservationId)
   //.update({status: status})
 }
+
 
 
 module.exports = {
@@ -38,5 +44,6 @@ module.exports = {
     listByNumber,
     create,
     read,
-    update
+    update,
+    updateStatus
   };

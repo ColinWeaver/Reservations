@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 
 
 function Requests(props){
+  //variables
     const {
       requestConfig, 
       setPostError, 
@@ -14,7 +15,6 @@ function Requests(props){
       reservationStatus,
       setReservationList,
       reservationList
-
     } = props;
     const history = useHistory();
     let option;
@@ -29,18 +29,18 @@ function Requests(props){
     if (requestConfig.fetchURL){
       fetchURL = requestConfig.fetchURL;
     }
-    
-    
+
+    //------------------------------------setting url for fetch------------------------------------------
     const API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
     const url = new URL(`${API_BASE_URL}${fetchURL}`);
-    console.log(url, 'url test!!!!!')
+
+    //---------------------------------------fetch useEffect--------------------------------
         useEffect(() => {
           async function request(){
             let fetchReturn;
             try {
               fetchReturn = await fetch(url, option);
-              console.log(fetchReturn, 'test in fetch')
               if (!fetchReturn.ok) {
                 if (setTables){
                   setTables([]);
@@ -52,22 +52,17 @@ function Requests(props){
               }
 
               else {
-                console.log('request test 2')
                 fetchReturn = await fetchReturn.json();
                 if (setTables) {
-                  console.log(tables, 'tables test request')
                   if (tables.length === 0){
-                    console.log("request test 3")
                   setTables(fetchReturn.data);
                   }
                   else {
-                    console.log('request test 4')
                     setTables([])
                   }
                 }
                 if (setReservationList) {
                   if (!reservationList){
-                  console.log('request test 5', fetchReturn)
                   setReservationList(fetchReturn.data);
                   //history.push(redirectURL);
                   }
@@ -83,22 +78,18 @@ function Requests(props){
                 //   }
                 // }
                 if (redirectURL) {
-                  console.log("request test 6")
                   history.push(redirectURL);
                 }
-                
-                
               }
             }
             catch(error){
               console.log(error);
-              
-
             };
            };
           request();
-          }, [tables, setPostError, requestConfig, setReservations ]);
-
+          if (!redirectURL) history.goBack();
+          }, [tables, setPostError, requestConfig]);
+//---------------------------------------------------
         return null;
 }
 
