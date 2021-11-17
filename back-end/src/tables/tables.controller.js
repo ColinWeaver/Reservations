@@ -3,6 +3,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 
 function hasData(req, res, next){
+  
   const data = req.body.data;
   if (!data) next({status: 400, message: 'missing data'});
   res.locals.data = data;
@@ -10,6 +11,7 @@ function hasData(req, res, next){
 }
 //create validations-------
 function hasPropertiesCreate(req, res, next){
+
   const data = res.locals.data;
   const properties = Object.keys(data)
   const requiredProperties = ["table_name", "capacity"]
@@ -120,10 +122,22 @@ async function notOccupiedDestroy(req, res, next){
   }
   
   res.locals.tableId = tableId;
+  res.locals.reservationId = table[0].reservation_id;
   next();
 }
 
-//--------------------------------------------------------------
+async function finishedReservationStatus(req, res, next){
+  const reservationId = res.locals.reservationId;
+  const reservation = await tablesService.readReservation(reservationId);
+  const reservationStatus = reservation.status;
+  if (reservationStatus === "finished"){
+    res.locals.alreadyFinished = true;
+  }
+  next();
+}
+
+
+//-------------------------------QUERY LOADERS-------------------------------
 async function list(req, res) {
   const response = await tablesService.list();
   res.json({ data: response});
@@ -138,18 +152,25 @@ async function create(req, res) {
 async function update(req, res){
  const tableId = res.locals.tableId;
  const data = req.body.data;
- const response = await tablesService.update(data, tableId);
- res.json({ data: response });
+ const reservationId = data.reservation_id;
+ const response = await tablesService.update(reservationId, tableId);
+ res.json({ data: { status: response } });
 }
 
 async function destroy(req, res){
+  let status = 'finished'
+  if (res.locals.alreadyFinished){
+    res.status(200)
+  }
   const tableId = res.locals.tableId;
-  const response = await tablesService.destroy(tableId);
-  res.json({data: response});
+  const reservationId = res.locals.reservationId;
+  const response = await tablesService.destroy(tableId, reservationId, status);
+  res.json({ data: response});
 }
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   create: [hasData, hasPropertiesCreate, capacity, tableName, asyncErrorBoundary(create)],
   update: [hasData, hasPropertiesUpdate, asyncErrorBoundary(tableNotOccupied), asyncErrorBoundary(validReservation), capacityUpdate, alreadySeated, asyncErrorBoundary(update)],
-  destroy: [asyncErrorBoundary(notOccupiedDestroy), asyncErrorBoundary(destroy)]
+  destroy: [asyncErrorBoundary(notOccupiedDestroy), asyncErrorBoundary(finishedReservationStatus), asyncErrorBoundary(destroy)]
 };

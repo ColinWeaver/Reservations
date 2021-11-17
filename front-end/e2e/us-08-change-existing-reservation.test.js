@@ -16,15 +16,12 @@ describe("US-08 - Change an existing reservation - E2E", () => {
   let page;
   let browser;
   let reservation;
-
   const dashboardTestPath = `${baseURL}/dashboard?date=2035-01-04`;
-
   beforeAll(async () => {
     await fsPromises.mkdir("./.screenshots", { recursive: true });
     setDefaultOptions({ timeout: 1000 });
     browser = await puppeteer.launch();
   });
-
   beforeEach(async () => {
     reservation = await createReservation({
       first_name: "Change",
@@ -43,6 +40,8 @@ describe("US-08 - Change an existing reservation - E2E", () => {
     await browser.close();
   });
 
+  //----------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------------
   describe("/dashboard page", () => {
     beforeEach(async () => {
       await page.goto(dashboardTestPath, {
@@ -50,89 +49,84 @@ describe("US-08 - Change an existing reservation - E2E", () => {
       });
     });
 
+    //-----------------------------------------------------------------------------
     describe("reservation edit link", () => {
+
       test("goes to the /reservations/:reservation_id/edit page", async () => {
         await page.screenshot({
           path: ".screenshots/us-08-dashboard-edit-click-before.png",
           fullPage: true,
         });
-
         const hrefSelector = `[href="/reservations/${reservation.reservation_id}/edit"]`;
+        console.log(hrefSelector, 'href test in test file')
         await page.waitForSelector(hrefSelector);
-
         await page.screenshot({
           path:
             ".screenshots/us-08-dashboard-edit-click-after-no-change-expected.png",
           fullPage: true,
         });
-
         expect(await page.$(hrefSelector)).toBeDefined();
       });
     });
+
+    //-----------------------------------------------------------------------------
     describe("clicking the reservation cancel button", () => {
+
+
       test("then clicking OK removes the reservation", async () => {
         await page.screenshot({
           path: ".screenshots/us-08-cancel-reservation-before.png",
           fullPage: true,
         });
-
         const cancelButtonSelector = `[data-reservation-id-cancel="${reservation.reservation_id}"]`;
-
         const cancelButton = await page.$(cancelButtonSelector);
-
         if (!cancelButton) {
           throw new Error(
             `Cancel button for reservation_id ${reservation.reservation_id} was not found.`
           );
         }
-
         page.on("dialog", async (dialog) => {
           expect(dialog.message()).toContain(
             "Do you want to cancel this reservation?"
           );
           await dialog.accept();
         });
-
         await cancelButton.click();
-
         await page.waitForResponse((response) => {
           return response.url().includes("/reservations?date=");
         });
-
         await page.waitForTimeout(500);
-
         expect(await page.$(cancelButtonSelector)).toBeNull();
       });
+
+
+
       test("then clicking cancel makes no changes", async () => {
         await page.screenshot({
           path: ".screenshots/us-08-dont-cancel-reservation-before.png",
           fullPage: true,
         });
-
         const cancelButtonSelector = `[data-reservation-id-cancel="${reservation.reservation_id}"]`;
-
         const cancelButton = await page.$(cancelButtonSelector);
-
         if (!cancelButton) {
           throw new Error("button containing cancel not found.");
         }
-
         page.on("dialog", async (dialog) => {
           await dialog.dismiss();
         });
-
         await cancelButton.click();
-
         await page.screenshot({
           path: ".screenshots/us-08-dont-cancel-reservation-after.png",
           fullPage: true,
         });
-
         expect(await page.$(cancelButtonSelector)).not.toBeNull();
       });
     });
   });
 
+
+
+//------------------------------------------EDIT RESERVATION PAGE---------------------------------------------------------
   describe("/reservations/:reservation_id/edit page", () => {
     beforeEach(async () => {
       await page.goto(`${baseURL}/dashboard`, {
@@ -146,63 +140,57 @@ describe("US-08 - Change an existing reservation - E2E", () => {
       );
     });
 
+
     test("canceling form returns to the previous page", async () => {
+      console.log('test in canceing form test in test file!!!!!!')
       const [cancelButton] = await page.$x(
         "//button[contains(translate(., 'ACDEFGHIJKLMNOPQRSTUVWXYZ', 'acdefghijklmnopqrstuvwxyz'), 'cancel')]"
       );
-
       if (!cancelButton) {
         throw new Error("button containing cancel not found.");
       }
-
       await page.screenshot({
         path: ".screenshots/us-08-edit-reservation-cancel-before.png",
         fullPage: true,
       });
-
       await Promise.all([
         cancelButton.click(),
         page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
-
       await page.screenshot({
         path: ".screenshots/us-08-edit-reservation-cancel-after.png",
         fullPage: true,
       });
-
       expect(page.url()).toContain("/dashboard");
     });
 
+
+//FAILING TEST!!!!!!!!!!!!!!
     test("filling and submitting form updates the reservation", async () => {
       const firstNameInput = await page.$("input[name=first_name]");
       await firstNameInput.click({ clickCount: 3 });
       await firstNameInput.type("John");
-
       const [submitButton] = await page.$x(
         "//button[contains(translate(., 'ACDEFGHIJKLMNOPQRSTUVWXYZ', 'acdefghijklmnopqrstuvwxyz'), 'submit')]"
       );
-
       if (!submitButton) {
         throw new Error("button containing submit not found.");
       }
-
       await page.screenshot({
         path: ".screenshots/us-08-edit-reservation-submit-before.png",
         fullPage: true,
       });
-
+      console.log(page, 'page test in test file 8')
       await Promise.all([
         submitButton.click(),
         page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
-
+      console.log(page, 'page test in test file 8')
       expect(page.url()).toContain("/dashboard");
-
       await page.screenshot({
         path: ".screenshots/us-08-edit-reservation-submit-after.png",
         fullPage: true,
       });
-
       await expect(page).toMatch(/John/);
     });
   });

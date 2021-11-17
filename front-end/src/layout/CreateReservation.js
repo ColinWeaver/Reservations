@@ -74,7 +74,7 @@ function CreateReservation(){
                 body: JSON.stringify({ data: newReservation })
               }
          if (newReservation){
-           console.log("test in config for fetch create res, ", newReservation)
+           
            requestConfig = {
              option: postRequestOption,
              redirectURL: `/dashboard?date=${newReservation.reservation_date}`,

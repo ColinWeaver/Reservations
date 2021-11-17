@@ -6,21 +6,34 @@ import ErrorAlert from "./ErrorAlert"
    function SeatReservation(){
      const history = useHistory();
      const [updatedTable, setUpdatedTable] = useState(null);
-     const [postError, setPostError] = useState(null);
+     const [tablesError, setTablesError] = useState(null);
+     const [reservationsError, setReservationsError] = useState(null);
      const useParam = useParams();
      const reservationId = useParam.reservation_id;
      const [tables, setTables] = useState([]);
      const [optionValue, setOptionValue] = useState(null);
-
+     const [reservationsFetch, setReservationsFetch] = useState(null);
+     //const [tablesFetch, setTablesFetch] = useState(true)
+     const [stop, setStop] = useState(false);
+     const [preStop, setPreStop] = useState(null);
+    
+     
      useEffect((() => {
-        if (postError) {
+        if (reservationsFetch) {
+          while(updatedTable){
           setUpdatedTable(null);
+          }//this loop may not be necessary since im setting to null in requests
         }
-      }),[postError]);
+          if (preStop){
+            setStop(true)
+          }
+      }),[reservationsFetch, preStop]);
 
+      //---------------------------handler functions------------------------------
         function submitHandler(event){
           event.preventDefault();
-          setPostError(null);
+          setTablesError(null);
+          setReservationsError(null);
           console.log(optionValue, 'submithandler value')
           const updated = {table_id: optionValue, reservation_id: reservationId}
           setUpdatedTable(updated);
@@ -35,27 +48,62 @@ import ErrorAlert from "./ErrorAlert"
           setOptionValue(event.target.value)
             }
 
+ //---------------------------------------------------------------------------------           
 //update table put request
-         let postRequestOption = {
-          method: 'PUT', 
-          credentials: 'same-origin',
-          headers: {'Content-Type': 'application/json'}, 
-          body: JSON.stringify({ data: { reservation_id: reservationId } })
-        }
+       
    if (updatedTable){
+     console.log('test in tables fetch config')
+    let putRequestOption = {
+      method: 'PUT', 
+      credentials: 'same-origin',
+      headers: {'Content-Type': 'application/json'}, 
+      body: JSON.stringify({ data: { reservation_id: reservationId } })
+    }
       let requestConfig = {
-       option: postRequestOption,
-       redirectURL: `/dashboard`,
-       fetchURL: `/tables/${updatedTable.table_id}/seat`
+       option: putRequestOption,
+       redirectURL: `/reservations/${reservationId}/seat`,
+       fetchURL: `/tables/${updatedTable.table_id}/seat`,
+       fetchId: 1
      }
       return (
       <Requests
       requestConfig={requestConfig}
-      setPostError={setPostError}
+      setPostError={setTablesError}
+      setReservationsFetch={setReservationsFetch}
+      setUpdatedTable={setUpdatedTable}
+      updatedTable={updatedTable}
       />
       )
-   }
+   } 
 
+  //update reservation put request
+  //if no post error from tables fetch then run this
+  console.log(tablesError, "tables error test outside second fetch")
+if (reservationsFetch && !stop && !tablesError){
+
+
+  console.log('test in fetch config reservations', tablesError)
+  let putRequestOption = {
+    method: 'PUT', 
+    credentials: 'same-origin',
+    headers: {'Content-Type': 'application/json'}, 
+    body: JSON.stringify({ data: { status: 'seated' } })
+  }
+let requestConfig = {
+ option: putRequestOption,
+ redirectURL: `/dashboard`,
+ fetchURL: `/reservations/${reservationId}/status`,
+ fetchId: 2
+}
+return (
+<Requests
+requestConfig={requestConfig}
+setPostError={setReservationsError}
+setPreStop={setPreStop}
+/>
+)
+}
+//----------------------------------------------------------------------------------
 //loads tables for table form
   if (tables.length < 1){
     console.log("test in seat reservation load tables condition")
@@ -65,7 +113,7 @@ import ErrorAlert from "./ErrorAlert"
     }
     return <Requests 
     requestConfig={requestConfig} 
-    setPostError={setPostError} 
+    setPostError={setTablesError} 
     setTables={setTables}
     tables={tables}
     />
@@ -83,7 +131,7 @@ import ErrorAlert from "./ErrorAlert"
       return (
                 <option 
                 value={table.table_id}>
-                {table.table_name} - {table.capacity}
+                {table.table_name} - {table.capacity} - {table.reservation_id}
                 </option>
       )
     })}
@@ -103,7 +151,8 @@ import ErrorAlert from "./ErrorAlert"
                return (
             <>
               <h1>Seat Reservation {reservationId} </h1>
-              <ErrorAlert error={postError}/>
+              <ErrorAlert error={tablesError}/>
+              <ErrorAlert error={reservationsError}/>
               <TablesForm/>
             </>
         

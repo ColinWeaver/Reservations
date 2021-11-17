@@ -8,7 +8,6 @@ function DisplayReservations({reservations}){
 
   
   function SeatButton({status, reservation_id}){
-    status = "booked"
     if (status === "booked"){
       return (
         <a href={`/reservations/${reservation_id}/seat`}>
@@ -24,18 +23,18 @@ function DisplayReservations({reservations}){
   const confirm = window.confirm("Do you want to cancel this reservation? This cannot be undone.")
   if (confirm){
     //set reservation status to cancel 
-    console.log()
+  
   }
 }
   //-------------------------------------------------------------
     if (reservations && reservations.length > 0){
      return reservations.map((reservation) =>{
        let reservation_id = reservation.reservation_id;
-       let status = "booked" //reservation.status 
+       let status = reservation.status //reservation.status 
         return (
         <div>
           <h4>Reservation {reservation.reservation_id}</h4>
-          <p data-reservation-id-status={reservation.reservation_id}>Status: {status} </p>
+          <p data-reservation-id-status={reservation.reservation_id}>{status} </p>
           <p>Last Name: {reservation.last_name}</p>
           <p>First Name: {reservation.first_name}</p>
           <p>Mobile Number: {reservation.mobile_number}</p>
@@ -43,10 +42,10 @@ function DisplayReservations({reservations}){
           <p>Time: {reservation.reservation_time}</p>
           <p>People: {reservation.people}</p>
           <SeatButton status={status} reservation_id={reservation_id}/>
-          <a href={`reservations/${reservation.reservation_id}/edit`}>
+          <a href={`/reservations/${reservation_id}/edit`}>
           <button>Edit</button>
           </a>
-          <button data-reservation-id-cancel={reservation.reservation_id} onClick={cancelHandler}>Cancel</button>
+          <button data-reservation-id-cancel={reservation_id} onClick={cancelHandler}>Cancel</button>
         </div>
         )
      })

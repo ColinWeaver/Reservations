@@ -26,7 +26,7 @@ function EditReservation(){
         }
       }),[postError]);
 
-
+console.log(newReservation, 'newreservation test')
   
 //get request for initial data
 if (!reservation ){
@@ -122,7 +122,8 @@ setPostError={setPostError}
           }
         }
 
-        function cancelHandler(){
+        function cancelHandler(event){
+          event.preventDefault()
           history.goBack();
         }
 

@@ -226,7 +226,8 @@ describe("US-06 - Reservation status", () => {
       expect(finishResponse.body.error).toBeUndefined();
       expect(finishResponse.status).toBe(200);
 
-      const reservationResponse = await request(app)
+      const reservationResponse = await request(app)//tries to set status to finished using this
+      //but issue with date
         .get(`/reservations/${reservationOne.reservation_id}`)
         .set("Accept", "application/json");
 
@@ -239,54 +240,69 @@ describe("US-06 - Reservation status", () => {
     });
   });
 
+
+//------------------------------------------------------------------------------
+  //THIS IS CURRENT ERROR!!!
   describe("GET /reservations/date=XXXX-XX-XX", () => {
     let reservationOne;
     let tableOne;
-
     beforeEach(async () => {
       reservationOne = await knex("reservations")
         .orderBy(["reservation_date", "reservation_time"])
-        .first();
+        .first()//.then((value) => console.log(value, 'test in loading reservationOne!!'))
       tableOne = await knex("tables").orderBy("table_name").first();
     });
+ console.log(reservationOne, 'reservationOne test in test file')//undefined
+ console.log(tableOne, 'table 1 test in test file')//tableOne is undefined
+
+
 
     test("does not include 'finished' reservations", async () => {
       expect(tableOne).not.toBeUndefined();
       expect(reservationOne).not.toBeUndefined();
+      
 
+
+      //seatResponse: sends reservationId put to tables
       const seatResponse = await request(app)
-        .put(`/tables/${tableOne.table_id}/seat`)
+        .put(`/tables/${tableOne.table_id}/seat`)//tHIS IS WEHRE PUT ERROR IS!!!!!!
         .set("Accept", "application/json")
         .send({ data: { reservation_id: reservationOne.reservation_id } });
-
       expect(seatResponse.body.error).toBeUndefined();
       expect(seatResponse.status).toBe(200);
 
+
+      //finishResponse: sends reservationId delete request
       const finishResponse = await request(app)
         .delete(`/tables/${tableOne.table_id}/seat`)
         .set("Accept", "application/json")
         .send({ data: { reservation_id: reservationOne.reservation_id } });
-
       expect(finishResponse.body.error).toBeUndefined();
       expect(finishResponse.status).toBe(200);
 
+
+      //reservationsResponse: gets reservation list. my reservation_date is wrong form
+      //needs to be date object. Check controller for reservation_date key data type
+      console.log(reservationOne.reservation_date, typeof reservationOne.reservation_date, 'date test for get i test file')
       const reservationsResponse = await request(app)
         .get(
           `/reservations?date=${asDateString(reservationOne.reservation_date)}`
         )
         .set("Accept", "application/json");
-
       expect(reservationsResponse.body.error).toBeUndefined();
 
+
+      //finishedReservations: checks reservations list for any finished
       const finishedReservations = reservationsResponse.body.data.filter(
         (reservation) => reservation.status === "finished"
       );
-
       expect(finishedReservations).toHaveLength(0);
     });
   });
 });
 
+
+// getfull year issue is here!!!!!!!
 function asDateString(date) {
   return `${date.getFullYear().toString(10)}-${(date.getMonth() + 1)
     .toString(10)

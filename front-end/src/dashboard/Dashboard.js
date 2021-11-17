@@ -46,7 +46,7 @@ useEffect(() => {
 //load reservations
   useEffect(loadDashboard, [date]);
   function loadDashboard() {
-    console.log("test in loaddash")
+   
     setReservations([])
     const abortController = new AbortController();
     setReservationsError(null);
@@ -175,7 +175,7 @@ function changeDayHandler(config){
 
   //rendered components below//-------------------------------------------------
   function TablesDisplay(){
-    console.log("test in tables display", tables)
+    
    if (tables.length > 0){
     return tables.map((table) => {
       let tableStatus = "Free"

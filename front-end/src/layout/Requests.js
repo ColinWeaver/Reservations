@@ -14,12 +14,18 @@ function Requests(props){
       setReservationStatus,
       reservationStatus,
       setReservationList,
-      reservationList
+      reservationList,
+      setReservationsFetch,
+      setPreStop,
+      setUpdatedTable,
+      updatedTable
+  
     } = props;
     const history = useHistory();
     let option;
     let redirectURL;
     let fetchURL;
+    let fetchId;
     if (requestConfig.option){
       option = requestConfig.option;
     }
@@ -29,6 +35,10 @@ function Requests(props){
     if (requestConfig.fetchURL){
       fetchURL = requestConfig.fetchURL;
     }
+    if (requestConfig.fetchId){
+      
+      fetchId = requestConfig.fetchId;
+    }
 
     //------------------------------------setting url for fetch------------------------------------------
     const API_BASE_URL =
@@ -37,22 +47,38 @@ function Requests(props){
 
     //---------------------------------------fetch useEffect--------------------------------
         useEffect(() => {
+         //fetch to reservations seems to retrigger the condition fetch reservations variable
+         //that it is based on without setting postError
+         //no conditin fits with the fetch to reservations so it is redirecting and continually running
           async function request(){
             let fetchReturn;
             try {
               fetchReturn = await fetch(url, option);
               if (!fetchReturn.ok) {
+                
                 if (setTables){
                   setTables([]);
                 }
                 let promiseObject = await fetchReturn.json();
                 let errorMessage = await promiseObject.error;
                 let errorObject = { message: errorMessage };
-                setPostError(errorObject)
+                setPostError(errorObject);
+                
+                if (fetchId === 1) {
+                  
+                  setUpdatedTable(null);
+                  setReservationsFetch(true);
+                }
+                //dont have post error as condition for reuqest if setting here in child
+                //need to redirect or else it will also set condition to run next fetch
               }
 
               else {
+               
                 fetchReturn = await fetchReturn.json();
+                
+               if (setPreStop) setPreStop(true)
+                //have some condition here to keep fetch to reservations from rendering
                 if (setTables) {
                   if (tables.length === 0){
                   setTables(fetchReturn.data);
@@ -64,7 +90,6 @@ function Requests(props){
                 if (setReservationList) {
                   if (!reservationList){
                   setReservationList(fetchReturn.data);
-                  //history.push(redirectURL);
                   }
                 }
                // if (setReRender) setReRender(true);
@@ -77,8 +102,18 @@ function Requests(props){
                 //     setReservationStatus("seated")
                 //   }
                 // }
+                if (fetchId === 1){
+                 
+                  setUpdatedTable(null);
+                  setReservationsFetch(true);
+                  
+                  //updated table as not null!! why????
+                
+
+                }
                 if (redirectURL) {
                   history.push(redirectURL);
+                  
                 }
               }
             }
@@ -88,7 +123,7 @@ function Requests(props){
            };
           request();
           if (!redirectURL) history.goBack();
-          }, [tables, setPostError, requestConfig]);
+          }, [tables, requestConfig, setReservationsFetch, setPostError, setUpdatedTable]);
 //---------------------------------------------------
         return null;
 }

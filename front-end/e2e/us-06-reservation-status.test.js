@@ -16,21 +16,19 @@ const onPageConsole = (msg) =>
 describe("US-06 - Reservation status - E2E", () => {
   let page;
   let browser;
-
   beforeAll(async () => {
     await fsPromises.mkdir("./.screenshots", { recursive: true });
     setDefaultOptions({ timeout: 1000 });
     browser = await puppeteer.launch();
   });
-
   afterAll(async () => {
     await browser.close();
   });
 
+
   describe("/dashboard page", () => {
     let reservation;
     let table;
-
     beforeEach(async () => {
       reservation = await createReservation({
         first_name: "Status",
@@ -40,12 +38,10 @@ describe("US-06 - Reservation status - E2E", () => {
         reservation_time: "13:45",
         people: 4,
       });
-
       table = await createTable({
         table_name: `#${Date.now().toString(10)}`,
         capacity: 99,
       });
-
       page = await browser.newPage();
       page.on("console", onPageConsole);
       await page.setViewport({ width: 1920, height: 1080 });
@@ -55,43 +51,46 @@ describe("US-06 - Reservation status - E2E", () => {
       await page.reload({ waitUntil: "networkidle0" });
     });
 
+
+    //------------------------------------------------------------------------------
     test("/dashboard displays status", async () => {
+      console.log(reservation, table, 'test for reservation, table in test file')
       await page.screenshot({
         path: ".screenshots/us-06-dashboard-displays-status.png",
         fullPage: true,
       });
-
       const containsBooked = await containsText(
         page,
         `[data-reservation-id-status="${reservation.reservation_id}"]`,
         "booked"
       );
-
       expect(containsBooked).toBe(true);
     });
 
+
+
+    //----------------------------------------------------------------------------
     test("Seating the reservation changes status to 'seated' and hides Seat button", async () => {
       await page.screenshot({
         path: ".screenshots/us-06-seated-before.png",
         fullPage: true,
       });
-
       await seatReservation(reservation.reservation_id, table.table_id);
-
       await page.reload({ waitUntil: "networkidle0" });
-
       await page.screenshot({
         path: ".screenshots/us-06-seated-after.png",
         fullPage: true,
       });
 
+      //should have status after seating
       const containsSeated = await containsText(
         page,
         `[data-reservation-id-status="${reservation.reservation_id}"]`,
         "seated"
       );
-
       expect(containsSeated).toBe(true);
+
+      //should not find href for seat button after seating
       expect(
         await page.$(
           `[href="/reservations/${reservation.reservation_id}/seat"]`
@@ -99,34 +98,28 @@ describe("US-06 - Reservation status - E2E", () => {
       ).toBeNull();
     });
 
+
+    //---------------------------------------------------------
     test("Finishing the table removes the reservation from the list", async () => {
       await seatReservation(reservation.reservation_id, table.table_id);
-
       await page.reload({ waitUntil: "networkidle0" });
-
       await page.screenshot({
         path: ".screenshots/us-06-finish-before.png",
         fullPage: true,
       });
-
       const finishButtonSelector = `[data-table-id-finish="${table.table_id}"]`;
       await page.waitForSelector(finishButtonSelector);
-
       page.on("dialog", async (dialog) => {
         await dialog.accept();
       });
-
       await page.click(finishButtonSelector);
-
       await page.waitForResponse((response) => {
         return response.url().endsWith(`/tables`);
       });
-
       await page.screenshot({
         path: ".screenshots/us-06-finish-after.png",
         fullPage: true,
       });
-
       expect(
         await page.$(
           `[data-reservation-id-status="${reservation.reservation_id}"]`
