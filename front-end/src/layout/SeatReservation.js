@@ -34,7 +34,6 @@ import ErrorAlert from "./ErrorAlert"
           event.preventDefault();
           setTablesError(null);
           setReservationsError(null);
-          console.log(optionValue, 'submithandler value')
           const updated = {table_id: optionValue, reservation_id: reservationId}
           setUpdatedTable(updated);
           
@@ -77,12 +76,7 @@ import ErrorAlert from "./ErrorAlert"
    } 
 
   //update reservation put request
-  //if no post error from tables fetch then run this
-  console.log(tablesError, "tables error test outside second fetch")
 if (reservationsFetch && !stop && !tablesError){
-
-
-  console.log('test in fetch config reservations', tablesError)
   let putRequestOption = {
     method: 'PUT', 
     credentials: 'same-origin',
@@ -106,7 +100,6 @@ setPreStop={setPreStop}
 //----------------------------------------------------------------------------------
 //loads tables for table form
   if (tables.length < 1){
-    console.log("test in seat reservation load tables condition")
     let requestConfig = {
       fetchURL: '/tables',
       redirectURL: `/reservations/${reservationId}/seat`
@@ -131,7 +124,7 @@ setPreStop={setPreStop}
       return (
                 <option 
                 value={table.table_id}>
-                {table.table_name} - {table.capacity} - {table.reservation_id}
+                {table.table_name} - {table.capacity}
                 </option>
       )
     })}

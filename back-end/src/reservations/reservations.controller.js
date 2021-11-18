@@ -193,28 +193,28 @@ function finishedStatus(req, res, next){
     next();
 }
 
-async function validatePreviousFetch(req, res, next){
-  const reservation = res.locals.reservation;
-  const reservationId = reservation.reservation_id;
-  const status = reservation.status;//needs to be checking 
-  const table = await reservationsService.readTables(reservationId);
-  const tableOccupied = table[0];
-  if ((status === "seated") && !tableOccupied){
+// async function validatePreviousFetch(req, res, next){
+//   const reservation = res.locals.reservation;
+//   const reservationId = reservation.reservation_id;
+//   const status = reservation.status;//needs to be checking 
+//   const table = await reservationsService.readTables(reservationId);
+//   const tableOccupied = table[0];
+  
+//   if ((status === "seated") && !tableOccupied){
    
-    next({status: 400, message: 'Current status of reservation is seated yet no table is associated.'})
-  }
-  if ((status === "finished") && tableOccupied){
-    next({status: 400, message: 'table is occupied yet reservation is finished.'})
-  }
-  if ((status === "booked") && tableOccupied){
-    next({status: 400, message: 'current status for reservation is booked yet reservation is associated with a table'})
-  }
-  if ((status === 'canceled') && tableOccupied){
-    next({status: 400, message: 'current status for reservation is canceled yet reservation is associated with table'})
-  }
-  next();
-
-}
+//     next({status: 400, message: 'Current status of reservation is seated yet no table is associated.'})
+//   }
+//   if ((status === "finished") && tableOccupied){
+//     next({status: 400, message: 'table is occupied yet reservation is finished.'})
+//   }
+//   if ((status === "booked") && tableOccupied){
+//     next({status: 400, message: 'current status for reservation is booked yet reservation is associated with a table'})
+//   }
+//   if ((status === 'canceled') && tableOccupied){
+//     next({status: 400, message: 'current status for reservation is canceled yet reservation is associated with table'})
+//   }
+//   next();
+// }
 
 //-------------------------------update----------------------------------------
 async function validReservation(req, res, next){
@@ -239,7 +239,6 @@ async function list(req, res) {
     const response = await reservationsService.listByNumber(mobileNumber)
     res.json({data: response})
   }
-  
 }
 
 async function create(req, res) {
@@ -260,12 +259,12 @@ async function read(req, res, next){
 
 async function updateStatus(req, res){
   const reservationId = res.locals.reservation.reservation_id;
-  const status = res.locals.status;//should originate from request body
+  const status = res.locals.status;
+  if ((status === 'finished') || (status === 'cancelled')){
+  await reservationsService.removeTableAssociation(reservationId);
+  }
   const response = await reservationsService.updateStatus(reservationId, status);
-  //if first request fails have it throw an error so second wont run. 
-  //for calling api directy just have it set reservaiotn status alone regardless of tables
   res.json({data: {status: response }});
-
 }
 
 
@@ -274,7 +273,7 @@ async function update(req, res){
   const reservation = res.locals.reservations;
   const response = await reservationsService.update(reservationId, reservation);
   console.log(response[0], 'update response')
-  res.json({ data: response[0] });//return 
+  res.json({ data: response[0] });
 
 }
 
@@ -282,6 +281,6 @@ module.exports = {
   list: [asyncErrorBoundary(list)],
   create: [hasData, hasProperties, firstName, lastName, mobileNumber, reservationDate, validateFutureDate, validateNotTuesday, reservationTime, people, status, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(read)],
-  updateStatus: [asyncErrorBoundary(validateReservationId), unknownStatus, finishedStatus, asyncErrorBoundary(validatePreviousFetch), asyncErrorBoundary(updateStatus)],
+  updateStatus: [asyncErrorBoundary(validateReservationId), unknownStatus, finishedStatus, asyncErrorBoundary(updateStatus)],
   update: [asyncErrorBoundary(validReservation), hasData, hasProperties, firstName, lastName, mobileNumber, reservationDate, validateFutureDate, validateNotTuesday, reservationTime, people, status, asyncErrorBoundary(update)]
 };

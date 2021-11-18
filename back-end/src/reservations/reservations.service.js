@@ -4,8 +4,9 @@ const knex = require("../db/connection");
 
 function listByDate(date){
      return knex('reservations').select('*')
-     .where({reservation_date: date })
-     .whereNot({status: "finished"})
+     .where({reservation_date: date, status: 'booked'})
+     .orWhere({reservation_date: date, status: 'seated'})
+     //.whereNot({status: "finished"}).orWhereNot({status:"cancelled"})
      .orderBy('reservation_time');
 }
 
@@ -38,23 +39,13 @@ function readTables(reservationId){
   .where('reservation_id', reservationId)
 }
 
-// function updateStatusSeat(reservationId, tableId){
-//   //set table reservation id and reservation status to 'seated'
-//   console.log("test in updateStatusSeat service", reservationId, tableId)
-//   return knex.transaction((trx) => {
-//     return Promise.all([
-//       knex('tables').select("*").where({table_id: tableId})
-//       .update({reservation_id: reservationId }).transacting(trx),
-//       knex('reservations').select("*")
-//       .where({reservation_id: reservationId})
-//       .update({status: 'seated'}).transacting(trx)
-//     ]).then(trx.commit).catch(trx.rollback)//.then((res) => 'seated').catch(console.error)
-//   })
-// }
-
+function removeTableAssociation(reservationId){
+  return knex('tables').select("*")
+  .where('reservation_id', reservationId)
+  .update('reservation_id', null);
+}
 
 function updateStatus(reservationId, status){
-  //this is called if current status in request body is finished and no table is associated
  return knex('reservations').select("*")
  .where('reservation_id', reservationId)
  .update({status: status}).then((value) => status).catch(console.error);
@@ -67,7 +58,7 @@ module.exports = {
     create,
     read,
     update,
-    //updateStatusSeat, 
+    removeTableAssociation,
     updateStatus,
     readTables
   };

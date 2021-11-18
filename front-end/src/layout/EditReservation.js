@@ -1,5 +1,5 @@
 import React, {useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, useLocation } from "react-router-dom";
 import Requests from "./Requests";
 import ErrorAlert from "./ErrorAlert"
 
@@ -17,17 +17,18 @@ function EditReservation(){
       const reservationId = useParam.reservation_id;
       const [reservation, setReservation] = useState(null);//load current reservation
       const [formValuesSet, setFormValuesSet] = useState(false);
-      //load reservations data with read request
-      //set each state form var equal to data 
-
+      const [redirectDate, setRedirectDate] = useState(null);
+      const location = useLocation();
+      const [address, setAddress] = useState(location);
+      
+     
       useEffect((() => {
         if (postError) {
           setNewReservation(null);
         }
       }),[postError]);
-
-console.log(newReservation, 'newreservation test')
   
+//------------------------------------FETCHES---------------------------------------------
 //get request for initial data
 if (!reservation ){
   let requestConfig = {
@@ -44,44 +45,57 @@ if (!reservation ){
   )
   }
 
-   //post request 
+   //PUT request to update reservation
 if (newReservation){
-  console.log(newReservation, 'newreservation test in put request')
-  let postRequestOption = {
+  let redirectURL;
+  if (!address.state){//test case tests for dashboard page 
+    redirectURL = `/dashboard?date=${redirectDate}`
+  }
+  else if (address.state.prev === '/search'){
+     redirectURL = "/search"
+  }
+  else {
+    console.log(redirectDate, 'redirec date test')
+    redirectURL = `/dashboard?date=${redirectDate}`
+  }
+
+  let option = {
     method: 'PUT', 
     credentials: 'same-origin',
     headers: {'Content-Type': 'application/json'}, 
     body: JSON.stringify({ data: newReservation })
   }
-let requestConfig = {
- option: postRequestOption,
- fetchURL: `/reservations/${reservationId}`
+let config = {
+ option: option,
+ fetchURL: `/reservations/${reservationId}`,
+ redirectURL: redirectURL
 }
 return (
 <Requests
-requestConfig={requestConfig}
+requestConfig={config}
 setPostError={setPostError}
 />
 )
 }
 //-------------------------------------------------------------------------
 
-  //set form values
+  //set initial form values
   if (reservation && !formValuesSet){
+    setRedirectDate(reservation.reservation_date.slice(0,10));//SETTING URL DATE FOR DASHBOARD REDIRECT
     setFirstName(reservation.first_name);
     setLastName(reservation.last_name);
     setMobileNumber(reservation.mobile_number);
     setReservationDate(reservation.reservation_date);
     setReservationTime(reservation.reservation_time);
     setPeopleCount(reservation.people);
-    setReservationDate(reservation.reservation_date);
+    //setReservationDate(reservation.reservation_date);
     setFormValuesSet(true);
+    
   }
-//---------------------------------------------------------------------------
+//--------------------------------HANDLER FUNCTIONS-------------------------------------------
   
         function submitHandler(event){
           event.preventDefault();
-          console.log('test in submit')
           const reservationObject = {};
           setPostError(null);
           reservationObject["first_name"] = firstName;
@@ -95,7 +109,6 @@ setPostError={setPostError}
       
 
         function changeHandler(event){
-          console.log('change handler')
           event.preventDefault()
            if (event.target.name === "first_name"){
               setFirstName(event.target.value);
@@ -123,9 +136,18 @@ setPostError={setPostError}
         }
 
         function cancelHandler(event){
-          event.preventDefault()
-          history.goBack();
+          event.preventDefault();
+          if (!address.state){
+            history.push('/dashboard')
+          }
+          else if (address.state.prev !== "/search"){
+             history.push(`/dashboard?date=${redirectDate}`)
+          }
+          else {
+            history.push('/search')
+          }
         }
+
 
      
 

@@ -32,7 +32,7 @@ function update(reservationId, tableId){
   }
 
 
-//finishes reservation: sets status to finished or alreadyFinished and removes table reservation_id
+//finishes reservation: sets status to finished and removes table reservation_id
 function destroy(tableId, reservationId, status){
   return knex.transaction((trx) => {
     return Promise.all([

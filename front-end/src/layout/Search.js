@@ -53,7 +53,7 @@ reservationList={reservationList}
           <ErrorAlert error={postError}/>
           <form onSubmit={submitHandler}>
             <label htmlFor="table_name">
-              Table Name: <br />
+              Search: <br />
               <input
                 id="mobile_number"
                 type="text"
@@ -74,7 +74,7 @@ reservationList={reservationList}
           </form>
           <br />
           <div>
-              <DisplayReservations reservations={reservationList}/>
+              <DisplayReservations reservations={reservationList} setReservationsError={setPostError}/>
               <NoReservations/>
           </div>
         </>

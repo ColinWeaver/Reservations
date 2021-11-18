@@ -36,7 +36,8 @@ function CreateTable(){
            };
         };
 
-        function cancelHandler(){
+        function cancelHandler(event){
+          event.preventDefault()
           history.goBack();
         }
 

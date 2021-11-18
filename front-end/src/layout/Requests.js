@@ -18,7 +18,9 @@ function Requests(props){
       setReservationsFetch,
       setPreStop,
       setUpdatedTable,
-      updatedTable
+      updatedTable,
+      setCancelFinished,
+      
   
     } = props;
     const history = useHistory();
@@ -55,7 +57,7 @@ function Requests(props){
             try {
               fetchReturn = await fetch(url, option);
               if (!fetchReturn.ok) {
-                
+                console.log("tst in failed fetch")
                 if (setTables){
                   setTables([]);
                 }
@@ -69,11 +71,13 @@ function Requests(props){
                   setUpdatedTable(null);
                   setReservationsFetch(true);
                 }
+
                 //dont have post error as condition for reuqest if setting here in child
                 //need to redirect or else it will also set condition to run next fetch
               }
 
               else {
+                console.log("test good fetch")
                
                 fetchReturn = await fetchReturn.json();
                 
@@ -111,6 +115,12 @@ function Requests(props){
                 
 
                 }
+                if (fetchId === 3){
+                
+                  //setReservations([])
+                  history.go(0)
+                  //setCancelFinished(true);
+                }
                 if (redirectURL) {
                   history.push(redirectURL);
                   
@@ -122,7 +132,7 @@ function Requests(props){
             };
            };
           request();
-          if (!redirectURL) history.goBack();
+          if (!redirectURL && (fetchId !== 3)) history.goBack();
           }, [tables, requestConfig, setReservationsFetch, setPostError, setUpdatedTable]);
 //---------------------------------------------------
         return null;
