@@ -85,12 +85,11 @@ setReservations={setReservations}
 function EditButton({status, reservation_id}){
   function notBookedHandler(event){
     event.preventDefault();
-    console.log('test in handler')
     setReservationsError({message: 'You cannot edit an already seated reservation.'})
   }
 if (status === 'booked'){
  return ( <Link to={{pathname: `/reservations/${reservation_id}/edit`, state: {prev: previousAddress}}}>
-          <button>Edit</button>
+          <button >Edit</button>
           </Link>
  )
 }
@@ -108,17 +107,15 @@ if (status === 'booked'){
        let reservation_id = reservation.reservation_id;
        let status = reservation.status;
         return (
-        <div>
-
-          {/* <ErrorAlert error={error}/> */}
-          <h4>Reservation {reservation.reservation_id}</h4>
-          <p data-reservation-id-status={reservation.reservation_id}>{status} </p>
-          <p>Last Name: {reservation.last_name}</p>
+        <div className="list-item">
+          <p>Reservation Id:{reservation.reservation_id}</p>
+          <p data-reservation-id-status={reservation.reservation_id}> {status} </p>
+          <p>Last Name:{reservation.last_name}</p>
           <p>First Name: {reservation.first_name}</p>
-          <p>Mobile Number: {reservation.mobile_number}</p>
-          <p> Date: {reservation.reservation_date}</p>
-          <p>Time: {reservation.reservation_time}</p>
-          <p>People: {reservation.people}</p>
+          <p>Mobile Number:{reservation.mobile_number}</p>
+          <p>Reservation Date: {reservation.reservation_date}</p>
+          <p>Reservation Time: {reservation.reservation_time}</p>
+          <p>Number of People: {reservation.people}</p>
           <SeatButton status={status} reservation_id={reservation_id}/>
           <EditButton status={status} reservation_id={reservation_id}/>
           <button data-reservation-id-cancel={reservation.reservation_id} value={reservation_id} onClick={cancelHandler}>Cancel</button>
@@ -126,7 +123,7 @@ if (status === 'booked'){
         )
      })
     }
-    else return null;
+    else return null //<p>There are no reservations to display.</p>;
   }
 
   export default DisplayReservations;

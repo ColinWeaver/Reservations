@@ -26,8 +26,8 @@ function Dashboard({ date }) {
   const [reRender, setReRender] = useState(false);
   const [reservationStatus, setReservationStatus] = useState("booked");//seated, or finished
   const [tablesError, setTablesError] = useState(null);
-  
-
+  const [tablesClass, setTablesClass] = useState('list-small');
+  const [reservationsClass, setReservationsClass] = useState('list-wide');
   if (queryDate) {
     date = queryDate;
   }
@@ -171,35 +171,68 @@ function changeDayHandler(config){
       }
 
       return (
-        <div>
-        <h4>Table: {table.table_id}</h4>
-        <p data-table-id-status={table.table_id}> {tableStatus}</p>
-        <p>Name: {table.table_name}</p>
-        <p>Capacity: {table.capacity}</p>
+        <div className="list-item">
+        <p>Table Name:{table.table_name}</p>
+        <p>{table.table_id}</p>
+        <p data-table-id-status={table.table_id}>  {tableStatus}</p>
+        <p>Table Capacity:{table.capacity}</p>
         <FinishButton tableStatus={tableStatus} table={table}/>
+        <br/>
+        <hr/>
         </div>
+       
       )
     })
   }
-  else return null;
+  else return null
 }
- 
+console.log(tablesClass, reservationsClass, 'talbe, reservation')
+
+ function classHandler(event){
+  // event.preventDefault();
+  console.log("tst in classHandler", event.target.value)
+  if (event.target.value === 'reservations'){
+   
+   setReservationsClass('list-wide')
+   setTablesClass('list-small')
+  }
+  else {
+    console.log('test fun')
+   setTablesClass('list-wide')
+   setReservationsClass('list-small')
+  }
+ };
+
+console.log(tablesClass, 'tableclass')
   return (
     <main>
-      <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations</h4>
+      <div className="dashboard-nav">
+      <button className="dashboard-title" onClick={classHandler} value="reservations" >Reservations</button>
+      <button className="dashboard-title" onClick={classHandler} value="tables">Tables</button>
       </div>
-      <div>
-        <button onClick={() => changeDayHandler("previous")}>Previous</button>
-        <button onClick={() => changeDayHandler("today")}>Today</button>
-        <button onClick={() => changeDayHandler("next")}>Next</button>
-      </div>
-      <br/>
+      <div className="lists">
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={postError}/>
+
+      <div className={reservationsClass}>
+      <div className="date-nav">
+        
+        <button className="date-nav-button" onClick={() => changeDayHandler("previous")}>Previous</button>
+        <button className="date-nav-button" onClick={() => changeDayHandler("today")}>Today</button>
+        <button className="date-nav-button" onClick={() => changeDayHandler("next")}>Next</button>
+      </div>
+      <br/>
+      <h5>Reservations for {queryDate} </h5>
       <DisplayReservations queryDate={queryDate} reservations={reservations} setReservations={setReservations} reservationsError={reservationsError} setReservationsError={setReservationsError}/>
+      </div>
+
+      <div className={tablesClass}>
+      <h5>Tables</h5>
+      <br/>
       <TablesDisplay/>
+      </div>
+      
+      </div>
      
     </main>
   );
