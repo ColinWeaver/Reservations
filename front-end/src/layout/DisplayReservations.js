@@ -108,14 +108,14 @@ if (status === 'booked'){
        let status = reservation.status;
         return (
         <div className="list-item">
-          <p>Reservation Id:{reservation.reservation_id}</p>
-          <p data-reservation-id-status={reservation.reservation_id}> {status} </p>
-          <p>Last Name:{reservation.last_name}</p>
-          <p>First Name: {reservation.first_name}</p>
-          <p>Mobile Number:{reservation.mobile_number}</p>
-          <p>Reservation Date: {reservation.reservation_date}</p>
-          <p>Reservation Time: {reservation.reservation_time}</p>
-          <p>Number of People: {reservation.people}</p>
+          <p><b>Reservation Id: &nbsp;</b>{reservation.reservation_id}</p>
+          <p data-reservation-id-status={reservation.reservation_id}> <b>Reservations Status:&nbsp;</b>{status} </p>
+          <p><b>Last Name:&nbsp;</b>{reservation.last_name}</p>
+          <p><b>First Name:&nbsp;</b>{reservation.first_name}</p>
+          <p><b>Mobile Number:&nbsp;</b>{reservation.mobile_number}</p>
+          <p><b>Reservation Date: &nbsp;</b>{reservation.reservation_date}</p>
+          <p><b>Reservation Time: &nbsp;</b>{reservation.reservation_time}</p>
+          <p><b>Number of People:&nbsp; </b>{reservation.people}</p>
           <SeatButton status={status} reservation_id={reservation_id}/>
           <EditButton status={status} reservation_id={reservation_id}/>
           <button data-reservation-id-cancel={reservation.reservation_id} value={reservation_id} onClick={cancelHandler}>Cancel</button>

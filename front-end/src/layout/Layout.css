@@ -5,10 +5,13 @@
   flex-direction: row;
 } */
 
+
+
 /*header ----------------------------------------------------------------------*/
 nav {
   display: flex;
   align-items: center; /* desktop only*/
+  color: white;
 }
 
 nav ul {
@@ -18,19 +21,40 @@ nav ul {
   flex: 2;
   padding-left: 0;
   list-style: none;
+  /* padding-bottom: 0px; */
+  margin-bottom: 0;
+  color: white;
+  
   }
 
-nav ul li {
-flex: 2;
-list-style-type: none;
+  .nav-item {
+    color: white;
+  }
+
+
+ nav ul li {/*squre round buttons */
+  color: white;
+  padding: 0 0px 20px 20px;  /*padding to set the square to highlihg as button later*/
+  margin-bottom: 0;
+  flex: 1;
+  /* list-style-type: none; */
+
+
+  
+
+} 
+nav ul li :hover {
+  text-decoration: none;
+  color: white;
 }
 
- nav ul li a {
-  color: #fff;
-  text-decoration: none;
-  padding: 0 20px 20px 0;/* padding to set the square to highlihg as button later*/
-  
-} 
+nav ul li a {
+  color: white;
+}
+nav ul li a:hover {
+  color: grey;
+}
+
 .header {
   display: flex;
   flex-direction: column;
@@ -38,9 +62,11 @@ list-style-type: none;
   padding: 0 30px;
   background-color: #393a44;
   text-align: center;
- 
   top: 0;/*for position*/
   width: 100%;/*for position*/
+  padding-bottom: 0;
+  
+  
 }
 
 .title {
@@ -55,6 +81,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  
  
   
 }
@@ -81,34 +108,35 @@ main {
 }
 
 .list-item {/* this display list itself*/
-flex-direction: column;
-flex: 5;
-
-
+flex-direction: row;
+flex: 1;
 }
 
-.list-wide {/*overall main dashboard display*/
+.list-wide {/*default display order*/ 
 flex-direction: column;
 flex: 1;
 display: flex;
 align-items: center;
+}
 
-}
-.list-small {
- /* font-size: 0;
-width: 0px;
-height: 0px;
-white-space: nowrap;
+/* .list-small {
+  flex-direction: column-reverse;
+  align-items: center;
+  flex:1;
+  display: flex; */
+  
+ /* font-size: 0; */
+/* width: 0px;
+height: 0px; */
+/* white-space: nowrap;
 overflow: hidden; */
-}
+/* } */
 
 
 /*-----------------------dashboard Navigation between reservations and tables-----------------------*/
 .dashboard-nav {
   display: flex;
   flex-basis: 50%;
- 
-  
 }
 
 .dashboard-title {
@@ -124,7 +152,19 @@ overflow: hidden; */
   background-color: pink;
 }
 
-/*--------------------------------BUTTONS GENERAL ------------------------------*/
+/*--------------------------------Search Form ------------------------------*/
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+ align-items: center;
+
+}
+
+  
+
+
+
 
 /*---------------------------------psuedo classes ---------------------------------*/
 /* button :visited {

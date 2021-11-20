@@ -21,7 +21,6 @@ setSubmitNumber((submitNumber) => submitNumber = mobileNumber);
 setReservationList(null);
 }
 
-//if reservationList.length === 0 then render message "No reservations found."
 
 function NoReservations(){
   if (reservationList && reservationList.length === 0){
@@ -49,11 +48,18 @@ reservationList={reservationList}
 
     return (
         <>
-          <h1>Search Reservations </h1>
+        <div className="search-container">
+          <br/>
+          <h5>Search Reservations </h5>
           <ErrorAlert error={postError}/>
-          <form onSubmit={submitHandler}>
+
+          <div >
+          
+          <form onSubmit={submitHandler} >
             <label htmlFor="table_name">
-              Search: <br />
+            <button type="submit" name="find" >
+              Find
+            </button>
               <input
                 id="mobile_number"
                 type="text"
@@ -61,21 +67,23 @@ reservationList={reservationList}
                 placeholder="Enter a customers phone number.."
                 onChange={changeHandler}
                 value={mobileNumber}
+                size="35"
               />
             </label>
+            
           <br />
         
             {/* <button type="cancel" name="cancel" onClick={cancelHandler}>Cancel
             </button> */}
             {"  "}
-            <button type="submit" name="find">
-              Find
-            </button>
+            
           </form>
+          </div>
           <br />
           <div>
               <DisplayReservations reservations={reservationList} setReservationsError={setPostError}/>
               <NoReservations/>
+          </div>
           </div>
         </>
       )

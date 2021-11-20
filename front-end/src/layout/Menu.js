@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 function Menu() {
   return (
-    
+    <header>
      <div className="header"> 
      <div className="title">
          <Link to="/">
@@ -50,16 +50,17 @@ function Menu() {
         </ul>
 
 
-        <div>
+        {/* <div>
           <button
             className="btn rounded-circle border-0"
             id="sidebarToggle"
             type="button"
           />
-        </div>
+        </div> */}
       {/* </div> */}
     </nav>
     </div>
+    </header>
   );
 }
 

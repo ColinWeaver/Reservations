@@ -26,7 +26,7 @@ function Dashboard({ date }) {
   const [reRender, setReRender] = useState(false);
   const [reservationStatus, setReservationStatus] = useState("booked");//seated, or finished
   const [tablesError, setTablesError] = useState(null);
-  const [tablesClass, setTablesClass] = useState('list-small');
+  // const [tablesClass, setTablesClass] = useState('list-small');
   const [reservationsClass, setReservationsClass] = useState('list-wide');
   if (queryDate) {
     date = queryDate;
@@ -142,6 +142,9 @@ function changeDayHandler(config){
     if (confirm){
       console.log('deleteseating before', deleteSeating)
       setDeleteSeating((value) => value = true);
+      // setTablesClass('list-small');
+      setReservationsClass('list-wide');
+      //set tales calss and reservations calss to null and have useeffect to reset values in that case??
       console.log('delete seating,', deleteSeating)
     }
   }
@@ -172,10 +175,10 @@ function changeDayHandler(config){
 
       return (
         <div className="list-item">
-        <p>Table Name:{table.table_name}</p>
-        <p>{table.table_id}</p>
-        <p data-table-id-status={table.table_id}>  {tableStatus}</p>
-        <p>Table Capacity:{table.capacity}</p>
+        <p><b>Table Name:&nbsp;</b>{table.table_name}</p>
+        <p><b>Table Id: &nbsp;</b>{table.table_id}</p>
+        <p data-table-id-status={table.table_id}> <b>Table Status: &nbsp;</b> {tableStatus}</p>
+        <p><b>Table Capacity:&nbsp;</b>{table.capacity}</p>
         <FinishButton tableStatus={tableStatus} table={table}/>
         <br/>
         <hr/>
@@ -186,47 +189,54 @@ function changeDayHandler(config){
   }
   else return null
 }
-console.log(tablesClass, reservationsClass, 'talbe, reservation')
 
- function classHandler(event){
-  // event.preventDefault();
-  console.log("tst in classHandler", event.target.value)
-  if (event.target.value === 'reservations'){
+
+//  function classHandler(event){
+//   // event.preventDefault();
+//   console.log("tst in classHandler", event.target.value)
+//   if (event.target.value === 'reservations'){
    
-   setReservationsClass('list-wide')
-   setTablesClass('list-small')
-  }
-  else {
-    console.log('test fun')
-   setTablesClass('list-wide')
-   setReservationsClass('list-small')
-  }
- };
+//    setReservationsClass('list-wide')
+//   //  setTablesClass('list-small')
+//   }
+//   else {
+//     console.log('test fun')
+//   //  setTablesClass('list-wide')
+//    setReservationsClass('list-small')
+//   }
+//  };
 
-console.log(tablesClass, 'tableclass')
   return (
+    
     <main>
-      <div className="dashboard-nav">
+     
+      {/* <div className="dashboard-nav">
       <button className="dashboard-title" onClick={classHandler} value="reservations" >Reservations</button>
       <button className="dashboard-title" onClick={classHandler} value="tables">Tables</button>
-      </div>
-      <div className="lists">
-      <ErrorAlert error={reservationsError} />
-      <ErrorAlert error={postError}/>
-
-      <div className={reservationsClass}>
-      <div className="date-nav">
+      </div> */}
+      
+       <div className="date-nav">
         
         <button className="date-nav-button" onClick={() => changeDayHandler("previous")}>Previous</button>
         <button className="date-nav-button" onClick={() => changeDayHandler("today")}>Today</button>
         <button className="date-nav-button" onClick={() => changeDayHandler("next")}>Next</button>
       </div>
+      <div className="lists">
+      <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={postError}/>
+
+      <div className="list-wide">
+        
+        <br/>
+     
       <br/>
-      <h5>Reservations for {queryDate} </h5>
+      <h5>Reservations for {date} </h5>
       <DisplayReservations queryDate={queryDate} reservations={reservations} setReservations={setReservations} reservationsError={reservationsError} setReservationsError={setReservationsError}/>
       </div>
 
-      <div className={tablesClass}>
+      <div className="list-wide">
+        
+        <br/>
       <h5>Tables</h5>
       <br/>
       <TablesDisplay/>

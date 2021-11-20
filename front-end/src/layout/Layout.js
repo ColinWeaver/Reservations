@@ -13,11 +13,11 @@ import "./Layout.css";
 function Layout() {
   return (
     <div>
-      <div >
-        <div>
+      <div className="layout">
+        <div className="layout-child">
           <Menu />
         </div>
-        <div>
+        <div className="layout-child">
           <Routes />
         </div>
       </div>
