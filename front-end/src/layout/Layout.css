@@ -113,16 +113,16 @@ nav ul li a {
   text-align: center;
   margin: auto;
   align-items: center;
+  
  }
 
  .date-nav-button {
-  padding: 10px;
   border: 0px;
   text-align: center;
   justify-content: center;
   width: 90px;
   background-color: #393a44;
-  height: 35px;
+  height: 40px;
   color: white;
 }
 
