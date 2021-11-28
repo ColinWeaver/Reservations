@@ -88,14 +88,18 @@ function CreateReservation(){
             )
          }
 
+         
          return (
             <>
-              <h1>Add Reservation</h1>
+            
+            <div className="form-container">
+
+              <h4>Add Reservation</h4>
               {/* <ErrorMessage/> */}
               <ErrorAlert error={postError}/>
               <form onSubmit={submitHandler}>
-                <label htmlFor="firstName">
-                  First Name: <br />
+                <label htmlFor="firstName" className="form-label">
+                  First Name: &nbsp; &nbsp;
                   <input
                     id="first"
                     type="text"
@@ -106,10 +110,10 @@ function CreateReservation(){
                    
                   />
                 </label>
-              <br />
+            
 
-              <label htmlFor="lastName">
-                  Last Name: <br />
+              <label htmlFor="lastName" className="form-label">
+                  Last Name:&nbsp; &nbsp;
                   <input
                     id="last"
                     type="text"
@@ -117,13 +121,12 @@ function CreateReservation(){
                     placeholder="last name"
                     onChange={changeHandler}
                     value={lastName}
-                    
                   />
                 </label>
-              <br />
+             
 
-              <label htmlFor="MobileNumber">
-                  Mobile Number: <br />
+              <label htmlFor="MobileNumber" className="form-label">
+                  Mobile Number:&nbsp; &nbsp; 
                     <input
                     id="mobileNumber"
                     type="tel"
@@ -134,10 +137,10 @@ function CreateReservation(){
                     
                   />
                 </label>
-              <br />
+             
 
-              <label htmlFor="date">
-                  Date: <br />
+              <label htmlFor="date" className="form-label">
+                  Date:&nbsp; &nbsp;
                   <input
                     id="date"
                     type="date"
@@ -147,10 +150,10 @@ function CreateReservation(){
                     
                   />
                 </label>
-              <br />
+             
 
-              <label htmlFor="time">
-                  Time: <br />
+              <label htmlFor="time" className="form-label">
+                  Time:&nbsp; &nbsp;
                   <input
                     id="time"
                     type="time"
@@ -160,10 +163,9 @@ function CreateReservation(){
                    
                   />
                 </label>
-              <br />
-
-              <label htmlFor="people">
-                  Number of People: <br />
+             
+              <label htmlFor="people" className="form-label">
+                  Number of People:&nbsp; &nbsp;
                   <input
                     id="people"
                     type="number"
@@ -173,16 +175,19 @@ function CreateReservation(){
                     value={peopleCount}
                   />
                 </label>
-                <br />
-                <br />
-
-                <button type="cancel" onClick={cancelHandler}>Cancel
+            
+            
+                <div className="form-buttons">
+                <button className="cancel-form-button" type="cancel" onClick={cancelHandler}>Cancel
                 </button>
                 {"  "}
-                <button type="submit" name="submit">
+                <button type="submit" name="submit" className="submit-button">
                   Submit
                 </button>
+                </div>
+                
               </form>
+            </div>
             </>
           )
          }

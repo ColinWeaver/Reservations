@@ -14,10 +14,10 @@ function Layout() {
   return (
     <div>
       <div className="layout">
-        <div className="layout-child">
+        <div className="menu">
           <Menu />
         </div>
-        <div className="layout-child">
+        <div className="routes">
           <Routes />
         </div>
       </div>

@@ -26,13 +26,15 @@ function Dashboard({ date }) {
   const [reRender, setReRender] = useState(false);
   const [reservationStatus, setReservationStatus] = useState("booked");//seated, or finished
   const [tablesError, setTablesError] = useState(null);
-  // const [tablesClass, setTablesClass] = useState('list-small');
-  const [reservationsClass, setReservationsClass] = useState('list-wide');
+  const [listsClass, setListsClass] = useState('lists');
+  const [reservationsButton, setReservationsButton] = useState('clicked-button');
+  const [tablesButton, setTablesButton] = useState('unclicked-button');
   if (queryDate) {
     date = queryDate;
   }
 
- 
+
+
 //to trigger reload of tables
 useEffect(() => {
   //   window.location.reload(false);
@@ -40,7 +42,7 @@ useEffect(() => {
   setDeleteSeating(false);
   }, [tables])
 
-
+ 
 //------------------------------------load rendered data----------------------------------------------------------------------
 //reservations loads when date changes useffect. tables load when page renders no useEffect
 
@@ -56,6 +58,8 @@ useEffect(() => {
     return () => abortController.abort();
   }
 
+
+  //------------TEMPORARILY NOT RENDERING THIS DONT DELETE!!!--------------------------------------------------------------------------------------------
   //load tables
   if (tables.length < 1){
     let redirectURL;
@@ -142,8 +146,8 @@ function changeDayHandler(config){
     if (confirm){
       console.log('deleteseating before', deleteSeating)
       setDeleteSeating((value) => value = true);
-      // setTablesClass('list-small');
-      setReservationsClass('list-wide');
+     
+     
       //set tales calss and reservations calss to null and have useeffect to reset values in that case??
       console.log('delete seating,', deleteSeating)
     }
@@ -155,7 +159,7 @@ function changeDayHandler(config){
     function FinishButton({tableStatus, table}){
       if (tableStatus === "Occupied"){
       return (
-      <button 
+      <button className="finish-button"
       data-table-id-finish={table.table_id} 
       value={table.table_id} 
       onClick={finishTableHandler}>Finish
@@ -175,75 +179,90 @@ function changeDayHandler(config){
 
       return (
         <div className="list-item">
+          <div className='reservation-data-container'>
         <p><b>Table Name:&nbsp;</b>{table.table_name}</p>
         <p><b>Table Id: &nbsp;</b>{table.table_id}</p>
         <p data-table-id-status={table.table_id}> <b>Table Status: &nbsp;</b> {tableStatus}</p>
         <p><b>Table Capacity:&nbsp;</b>{table.capacity}</p>
+        </div>
+        <div className="reservation-buttons-container">
         <FinishButton tableStatus={tableStatus} table={table}/>
-        <br/>
-        <hr/>
+        </div>
         </div>
        
       )
     })
   }
-  else return null
+  else return null;
+  // else return (
+  //   <>
+  //   <div className="list-item">
+  //   <div className='reservation-data-container'>
+  //   <p><b>Table Name:&nbsp;&nbsp;&nbsp;&nbsp;</b>Name</p>
+  //   <p><b>Table Id: &nbsp;&nbsp;&nbsp;&nbsp;</b>5</p>
+  //   <p><b>Table Status: &nbsp;&nbsp;&nbsp;&nbsp;</b> Occupied</p>
+  //   <p><b>Table Capacity:&nbsp;&nbsp;&nbsp;&nbsp;</b>2</p>
+  //   </div>
+  //   <div className="reservation-buttons-container">
+  //   <FinishButton tableStatus={"Occupied"} table={{table_name: 'Name', table_id: 5, table_capacity: 2, reservation_id: 2}}/>
+  //   </div>
+  //   </div>
+  //   <div><hr/></div>
+
+  //   <div className="list-item">
+  //   <div className='reservation-data-container'>
+  //   <p><b>Table Name:&nbsp;&nbsp;&nbsp;&nbsp;</b>Name</p>
+  //   <p><b>Table Id: &nbsp;&nbsp;&nbsp;&nbsp;</b>5</p>
+  //   <p><b>Table Status: &nbsp;&nbsp;&nbsp;&nbsp;</b> Occupied</p>
+  //   <p><b>Table Capacity:&nbsp;&nbsp;&nbsp;&nbsp;</b>2</p>
+  //   </div>
+  //   <div className="reservation-buttons-container">
+  //   <FinishButton tableStatus={"Occupied"} table={{table_name: 'Name', table_id: 5, table_capacity: 2, reservation_id: 2}}/>
+  //   </div>
+  //   </div>
+  //   <div><hr/></div>
+
+    
+
+  //   </>
+  // )
 }
 
 
-//  function classHandler(event){
-//   // event.preventDefault();
-//   console.log("tst in classHandler", event.target.value)
-//   if (event.target.value === 'reservations'){
-   
-//    setReservationsClass('list-wide')
-//   //  setTablesClass('list-small')
-//   }
-//   else {
-//     console.log('test fun')
-//   //  setTablesClass('list-wide')
-//    setReservationsClass('list-small')
-//   }
-//  };
 
   return (
     
     <main>
-     
-      {/* <div className="dashboard-nav">
-      <button className="dashboard-title" onClick={classHandler} value="reservations" >Reservations</button>
-      <button className="dashboard-title" onClick={classHandler} value="tables">Tables</button>
-      </div> */}
       
-       <div className="date-nav">
-        
+     <div className="date-nav">
         <button className="date-nav-button" onClick={() => changeDayHandler("previous")}>Previous</button>
         <button className="date-nav-button" onClick={() => changeDayHandler("today")}>Today</button>
         <button className="date-nav-button" onClick={() => changeDayHandler("next")}>Next</button>
-      </div>
-      <div className="lists">
+    </div>
+
+    <div className="errors">
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={postError}/>
+   </div>
 
-      <div className="list-wide">
-        
-        <br/>
-     
-      <br/>
-      <h5>Reservations for {date} </h5>
-      <DisplayReservations queryDate={queryDate} reservations={reservations} setReservations={setReservations} reservationsError={reservationsError} setReservationsError={setReservationsError}/>
-      </div>
+      <div className={listsClass}>
+      <h3 className="list-title">Reservations for {date} </h3>
+  
+      <DisplayReservations 
+      queryDate={queryDate} 
+      reservations={reservations} 
+      setReservations={setReservations} 
+      reservationsError={reservationsError} 
+      setReservationsError={setReservationsError}/>
 
-      <div className="list-wide">
-        
-        <br/>
-      <h5>Tables</h5>
-      <br/>
-      <TablesDisplay/>
-      </div>
+      <h3 className="list-title">Tables</h3>
       
-      </div>
+      <TablesDisplay/>
      
+     
+
+      
+</div>
     </main>
   );
 }

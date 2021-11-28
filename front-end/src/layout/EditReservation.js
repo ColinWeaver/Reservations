@@ -30,6 +30,7 @@ function EditReservation(){
   
 //------------------------------------FETCHES---------------------------------------------
 //get request for initial data
+//TEMPORARY COMMENTED OUT FOR STYLING!!!!!!!!!!!!!!!DO NOT DELETE!!!
 if (!reservation ){
   let requestConfig = {
   redirectURL: `/reservations/${reservationId}/edit`,
@@ -88,7 +89,6 @@ setPostError={setPostError}
     setReservationDate(reservation.reservation_date);
     setReservationTime(reservation.reservation_time);
     setPeopleCount(reservation.people);
-    //setReservationDate(reservation.reservation_date);
     setFormValuesSet(true);
     
   }
@@ -153,12 +153,13 @@ setPostError={setPostError}
 
          return (
             <>
-              <h1>Edit Reservation</h1>
+            <div className="form-container">
+              <h4>Edit Reservation</h4>
               {/* <ErrorMessage/> */}
               <ErrorAlert error={postError}/>
               <form onSubmit={submitHandler}>
-                <label htmlFor="firstName">
-                  First Name: <br />
+                <label htmlFor="firstName" className="form-label">
+                  First Name:&nbsp; &nbsp;
                   <input
                     id="first"
                     type="text"
@@ -169,10 +170,10 @@ setPostError={setPostError}
                    
                   />
                 </label>
-              <br />
+            
 
-              <label htmlFor="lastName">
-                  Last Name: <br />
+              <label htmlFor="lastName" className="form-label">
+                  Last Name:&nbsp; &nbsp;
                   <input
                     id="last"
                     type="text"
@@ -183,10 +184,10 @@ setPostError={setPostError}
                     
                   />
                 </label>
-              <br />
+           
 
-              <label htmlFor="MobileNumber">
-                  Mobile Number: <br />
+              <label htmlFor="MobileNumber" className="form-label">
+                  Mobile Number:&nbsp; &nbsp;
                     <input
                     id="mobileNumber"
                     type="tel"
@@ -197,10 +198,10 @@ setPostError={setPostError}
                     
                   />
                 </label>
-              <br />
+            
 
-              <label htmlFor="date">
-                  Date: <br />
+              <label htmlFor="date" className="form-label">
+                  Date:&nbsp; &nbsp;
                   <input
                     id="date"
                     type="date"
@@ -210,10 +211,10 @@ setPostError={setPostError}
                     
                   />
                 </label>
-              <br />
+             
 
-              <label htmlFor="time">
-                  Time: <br />
+              <label htmlFor="time" className="form-label">
+                  Time:&nbsp; &nbsp;
                   <input
                     id="time"
                     type="time"
@@ -223,10 +224,10 @@ setPostError={setPostError}
                    
                   />
                 </label>
-              <br />
+          
 
-              <label htmlFor="people">
-                  Number of People: <br />
+              <label htmlFor="people" className="form-label">
+                  Number of People:&nbsp; &nbsp;
                   <input
                     id="people"
                     type="number"
@@ -236,16 +237,16 @@ setPostError={setPostError}
                     value={peopleCount}
                   />
                 </label>
-                <br />
-                <br />
-
-                <button type="cancel" onClick={cancelHandler}>Cancel
+               <div className="form-buttons">
+                <button className="cancel-form-button" type="cancel" onClick={cancelHandler}>Cancel
                 </button>
                 {"  "}
-                <button type="submit" name="submit">
+                <button className="submit-button" type="submit" name="submit">
                   Submit
                 </button>
+                </div>
               </form>
+              </div>
             </>
           )
          }

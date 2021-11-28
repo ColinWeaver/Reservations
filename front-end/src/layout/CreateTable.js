@@ -63,11 +63,15 @@ function CreateTable(){
 
          return (
             <>
-              <h1>Add Table</h1>
+            
+            <div className="form-container">
+              <h4>Add Table</h4>
+              
               <ErrorAlert error={postError}/>
-              <form onSubmit={submitHandler}>
-                <label htmlFor="table_name">
-                  Table Name: <br />
+
+              <form onSubmit={submitHandler} >
+                <label htmlFor="table_name" className="form-label">
+                  Table Name:&nbsp; &nbsp;
                   <input
                     id="table_name"
                     type="text"
@@ -77,9 +81,9 @@ function CreateTable(){
                     value={tableName}
                   />
                 </label>
-              <br />
-              <label htmlFor="capacity">
-                  Capacity: <br />
+             
+              <label htmlFor="capacity" className="form-label">
+                  Capacity:&nbsp; &nbsp;
                   <input
                     id="capacity"
                     type="number"
@@ -90,14 +94,17 @@ function CreateTable(){
                   />
                 </label>
 
-
-                <button type="cancel" name="cancel" onClick={cancelHandler}>Cancel
+                <div className="form-buttons">
+                <button className="cancel-form-button" type="cancel" name="cancel" onClick={cancelHandler}>Cancel
                 </button>
                 {"  "}
-                <button type="submit" name="submit">
+                <button className="submit-button" type="submit" name="submit">
                   Submit
                 </button>
+                </div>
               </form>
+              </div>
+              
             </>
           )
          }

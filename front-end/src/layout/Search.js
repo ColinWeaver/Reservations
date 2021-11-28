@@ -48,18 +48,19 @@ reservationList={reservationList}
 
     return (
         <>
-        <div className="search-container">
-          <br/>
-          <h5>Search Reservations </h5>
+        <div className="form-container">
+          <h4>Search Reservations </h4>
           <ErrorAlert error={postError}/>
 
           <div >
-          
+
           <form onSubmit={submitHandler} >
-            <label htmlFor="table_name">
-            <button type="submit" name="find" >
+            <label htmlFor="table_name" className="search-form">
+
+            <button type="submit" name="find" className="find-button" >
               Find
             </button>
+
               <input
                 id="mobile_number"
                 type="text"
@@ -67,23 +68,23 @@ reservationList={reservationList}
                 placeholder="Enter a customers phone number.."
                 onChange={changeHandler}
                 value={mobileNumber}
-                size="35"
+                size="30"
               />
+
             </label>
-            
-          <br />
         
             {/* <button type="cancel" name="cancel" onClick={cancelHandler}>Cancel
             </button> */}
             {"  "}
             
           </form>
+
           </div>
-          <br />
-          <div>
+          
+          </div>
+          <div className="lists">
               <DisplayReservations reservations={reservationList} setReservationsError={setPostError}/>
               <NoReservations/>
-          </div>
           </div>
         </>
       )

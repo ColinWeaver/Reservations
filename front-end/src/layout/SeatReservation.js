@@ -22,7 +22,7 @@ import ErrorAlert from "./ErrorAlert"
         if (reservationsFetch) {
           while(updatedTable){
           setUpdatedTable(null);
-          }//this loop may not be necessary since im setting to null in requests
+          }
         }
           if (preStop){
             setStop(true)
@@ -98,6 +98,7 @@ setPreStop={setPreStop}
 )
 }
 //----------------------------------------------------------------------------------
+//TEMPORARILY COMMENTED FOR STYLING PURPOSES!!!!!!!!
 //loads tables for table form
   if (tables.length < 1){
     let requestConfig = {
@@ -139,14 +140,35 @@ setPreStop={setPreStop}
     </>
      )
   }
-  else return null;
+//   else return (
+//     <>
+//     <form onSubmit={submitHandler}>
+//     <select className="form-select" name="table_id" value={optionValue} onChange={changeHandler}>
+//     <option 
+//     value={2}>
+//     {"name"} - {1}
+//     </option>
+//     </select>
+//     <div className="form-buttons">
+// <button className="cancel-form-button" type="cancel" onClick={cancelHandler}>Cancel
+//       </button>
+//       {"  "}
+//       <button className="submit-button" type="submit" name="submit">
+//         Submit
+//       </button>
+//       </div>
+//     </form>
+//     </>
+//   );
 }
                return (
             <>
-              <h1>Seat Reservation {reservationId} </h1>
+             <div className="form-container">
+              <h4>Seat Reservation {reservationId} </h4>
               <ErrorAlert error={tablesError}/>
               <ErrorAlert error={reservationsError}/>
               <TablesForm/>
+              </div>
             </>
         
 )
