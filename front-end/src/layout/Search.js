@@ -68,7 +68,7 @@ reservationList={reservationList}
                 placeholder="Enter a customers phone number.."
                 onChange={changeHandler}
                 value={mobileNumber}
-                size="30"
+                size="35"
               />
 
             </label>
