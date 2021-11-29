@@ -95,7 +95,6 @@ function CreateReservation(){
             <div className="form-container">
 
               <h4>Add Reservation</h4>
-              {/* <ErrorMessage/> */}
               <ErrorAlert error={postError}/>
               <form onSubmit={submitHandler}>
                 <label htmlFor="firstName" className="form-label">

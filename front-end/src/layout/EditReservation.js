@@ -155,7 +155,6 @@ setPostError={setPostError}
             <>
             <div className="form-container">
               <h4>Edit Reservation</h4>
-              {/* <ErrorMessage/> */}
               <ErrorAlert error={postError}/>
               <form onSubmit={submitHandler}>
                 <label htmlFor="firstName" className="form-label">

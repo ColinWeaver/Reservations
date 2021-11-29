@@ -1,6 +1,6 @@
-import React, {useEffect, useState } from "react";
-import { useHistory, Link, useLocation } from "react-router-dom";
-import ErrorAlert from "./ErrorAlert"
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+// import ErrorAlert from "./ErrorAlert"
 import Requests from "./Requests";
 
 
@@ -17,19 +17,9 @@ if (location.pathname.includes('search')) {
    previousAddress = location.pathname;
 }
 
-// useEffect(() => {
-// if (reservationsError || setReservations) {
-//   console.log("test!!")
-//   setStopFetch(true);
-//   setCancelReservation(false);
-  
-// }
-// }, [reservationsError, cancelFinished, reservations])
-
   function SeatButton({status, reservation_id}){
     if (status === "booked"){
       return (
-        
         <Link to={`/reservations/${reservation_id}/seat`}>
         <button className="seat-button">Seat</button>
         </Link>
@@ -43,7 +33,6 @@ if (location.pathname.includes('search')) {
   function cancelHandler(event){
   event.preventDefault();
   setReservationId(event.target.value)
-  //setReservationStatus(event.target.value.status);
   const confirm = window.confirm("Do you want to cancel this reservation? This cannot be undone.")
   if (confirm){
     setCancelReservation(true);
@@ -106,16 +95,27 @@ if (status === 'booked'){
      return reservations.map((reservation) =>{
        let reservation_id = reservation.reservation_id;
        let status = reservation.status;
+
+       const time = () => {
+         let hour = reservation.reservation_time.slice(0,2);
+         let minute = reservation.reservation_time.slice(3,5);
+        if (hour > 12){
+          hour = hour - 12;
+          return `${hour}:${minute} PM`
+        }
+        else return `${hour}:${minute} AM`
+       }
+       
         return (
         <div className="list-item">
           <div className="reservation-data-container">
-          <p><b>Reservation Id: &nbsp;</b>{reservation.reservation_id}</p>
+          <p><b>Reservation ID: &nbsp;</b>{reservation.reservation_id}</p>
           <p data-reservation-id-status={reservation.reservation_id}> <b>Reservations Status:&nbsp;</b>{status} </p>
           <p><b>Last Name:&nbsp;</b>{reservation.last_name}</p>
           <p><b>First Name:&nbsp;</b>{reservation.first_name}</p>
           <p><b>Mobile Number:&nbsp;</b>{reservation.mobile_number}</p>
           <p><b>Reservation Date: &nbsp;</b>{reservation.reservation_date}</p>
-          <p><b>Reservation Time: &nbsp;</b>{reservation.reservation_time}</p>
+          <p><b>Reservation Time: &nbsp;</b>{time()}</p>
           <p><b>Number of People:&nbsp; </b>{reservation.people}</p>
           </div>
           <div className="reservation-buttons-container">
@@ -128,69 +128,7 @@ if (status === 'booked'){
      })
     }
     else return <p>No reservations to display for this date.</p>;
-    // else return (
-    //  <>
-
-
-    //     <div className="list-item">
-    //       <div className='reservation-data-container'>
-    //       <p><b>Reservation Id: &nbsp;&nbsp;&nbsp;&nbsp;</b>2</p>
-    //       <p> <b>Reservations Status:&nbsp;&nbsp;&nbsp;&nbsp;</b>seated </p>
-    //       <p><b>Last Name:&nbsp;&nbsp;&nbsp;&nbsp;</b>Lastname</p>
-    //       <p><b>First Name:&nbsp;&nbsp;&nbsp;</b>firstname</p>
-    //       <p><b>Mobile Number:&nbsp;&nbsp;</b>382983478375</p>
-    //       <p><b>Reservation Date: &nbsp;&nbsp;&nbsp;</b>2020-08-02</p>
-    //       <p><b>Reservation Time: &nbsp;&nbsp;&nbsp;</b>08:22</p>
-    //       <p><b>Number of People:&nbsp;&nbsp;&nbsp; </b>2</p>
-    //       </div>
-    //       <div className="reservation-buttons-container">
-    //       <SeatButton status={"booked"} reservation_id={2}/>
-    //       <EditButton status={'booked'} reservation_id={2}/>
-    //       </div>
-    //       <button className='cancel-button' value={2} onClick={cancelHandler}>Cancel</button>
-    //     </div>
-    //     <div><hr/></div>
-
-    //     <div className="list-item">
-    //       <div className='reservation-data-container'>
-    //       <p><b>Reservation Id: &nbsp;&nbsp;&nbsp;&nbsp;</b>2</p>
-    //       <p> <b>Reservations Status:&nbsp;&nbsp;&nbsp;&nbsp;</b>seated </p>
-    //       <p><b>Last Name:&nbsp;&nbsp;&nbsp;&nbsp;</b>Lastname</p>
-    //       <p><b>First Name:&nbsp;&nbsp;&nbsp;</b>firstname</p>
-    //       <p><b>Mobile Number:&nbsp;&nbsp;</b>382983478375</p>
-    //       <p><b>Reservation Date: &nbsp;&nbsp;&nbsp;</b>2020-08-02</p>
-    //       <p><b>Reservation Time: &nbsp;&nbsp;&nbsp;</b>08:22</p>
-    //       <p><b>Number of People:&nbsp;&nbsp;&nbsp; </b>2</p>
-    //       </div>
-    //       <div className="reservation-buttons-container">
-    //       <SeatButton status={"booked"} reservation_id={2}/>
-    //       <EditButton status={'booked'} reservation_id={2}/>
-    //       </div>
-    //       <button className='cancel-button' value={2} onClick={cancelHandler}>Cancel</button>
-    //     </div>
-    //     <div><hr/></div>
-    //     <div className="list-item">
-    //       <div className='reservation-data-container'>
-    //       <p><b>Reservation Id: &nbsp;&nbsp;&nbsp;&nbsp;</b>2</p>
-    //       <p> <b>Reservations Status:&nbsp;&nbsp;&nbsp;&nbsp;</b>seated </p>
-    //       <p><b>Last Name:&nbsp;&nbsp;&nbsp;&nbsp;</b>Lastname</p>
-    //       <p><b>First Name:&nbsp;&nbsp;&nbsp;</b>firstname</p>
-    //       <p><b>Mobile Number:&nbsp;&nbsp;</b>382983478375</p>
-    //       <p><b>Reservation Date: &nbsp;&nbsp;&nbsp;</b>2020-08-02</p>
-    //       <p><b>Reservation Time: &nbsp;&nbsp;&nbsp;</b>08:22</p>
-    //       <p><b>Number of People:&nbsp;&nbsp;&nbsp; </b>2</p>
-    //       </div>
-    //       <div className="reservation-buttons-container">
-    //       <SeatButton status={"booked"} reservation_id={2}/>
-    //       <EditButton status={'booked'} reservation_id={2}/>
-    //       </div>
-    //       <button className='cancel-button' value={2} onClick={cancelHandler}>Cancel</button>
-    //     </div>
-    //     <div><hr/></div>
-       
-       
-    // </>
-    // )
+   
   }
 
   export default DisplayReservations;

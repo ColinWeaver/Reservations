@@ -13,8 +13,8 @@ function Menu() {
   const [searchClass, setSearchClass] = useState(null);
   const [addReservationClass, setAddReservationClass] = useState(null);
   const [addTableClass, setAddTableClass] = useState(null);
-  const [currentPage, setCurrentPage] = useState(null);
-  console.log(location.pathname)
+  // const [currentPage, setCurrentPage] = useState(null);
+  
 
   useEffect(() => {
     if (location.pathname === '/dashboard'){
@@ -87,16 +87,6 @@ function Menu() {
             </Link>
           </li>
         </ul>
-
-
-        {/* <div>
-          <button
-            className="btn rounded-circle border-0"
-            id="sidebarToggle"
-            type="button"
-          />
-        </div> */}
-      {/* </div> */}
     </nav>
     
     </header>

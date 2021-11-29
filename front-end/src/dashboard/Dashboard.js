@@ -146,10 +146,7 @@ function changeDayHandler(config){
     if (confirm){
       console.log('deleteseating before', deleteSeating)
       setDeleteSeating((value) => value = true);
-     
-     
-      //set tales calss and reservations calss to null and have useeffect to reset values in that case??
-      console.log('delete seating,', deleteSeating)
+
     }
   }
 
@@ -174,14 +171,14 @@ function changeDayHandler(config){
       let tableStatus = "Free"
       if (table.reservation_id){
         tableStatus = "Occupied";
-       // setReservationId(table.reservation_id);
       }
 
       return (
+        <>
         <div className="list-item">
           <div className='reservation-data-container'>
         <p><b>Table Name:&nbsp;</b>{table.table_name}</p>
-        <p><b>Table Id: &nbsp;</b>{table.table_id}</p>
+        <p><b>Table ID: &nbsp;</b>{table.table_id}</p>
         <p data-table-id-status={table.table_id}> <b>Table Status: &nbsp;</b> {tableStatus}</p>
         <p><b>Table Capacity:&nbsp;</b>{table.capacity}</p>
         </div>
@@ -189,43 +186,13 @@ function changeDayHandler(config){
         <FinishButton tableStatus={tableStatus} table={table}/>
         </div>
         </div>
-       
+        <div><hr/></div>
+       </>
       )
     })
   }
   else return null;
-  // else return (
-  //   <>
-  //   <div className="list-item">
-  //   <div className='reservation-data-container'>
-  //   <p><b>Table Name:&nbsp;&nbsp;&nbsp;&nbsp;</b>Name</p>
-  //   <p><b>Table Id: &nbsp;&nbsp;&nbsp;&nbsp;</b>5</p>
-  //   <p><b>Table Status: &nbsp;&nbsp;&nbsp;&nbsp;</b> Occupied</p>
-  //   <p><b>Table Capacity:&nbsp;&nbsp;&nbsp;&nbsp;</b>2</p>
-  //   </div>
-  //   <div className="reservation-buttons-container">
-  //   <FinishButton tableStatus={"Occupied"} table={{table_name: 'Name', table_id: 5, table_capacity: 2, reservation_id: 2}}/>
-  //   </div>
-  //   </div>
-  //   <div><hr/></div>
-
-  //   <div className="list-item">
-  //   <div className='reservation-data-container'>
-  //   <p><b>Table Name:&nbsp;&nbsp;&nbsp;&nbsp;</b>Name</p>
-  //   <p><b>Table Id: &nbsp;&nbsp;&nbsp;&nbsp;</b>5</p>
-  //   <p><b>Table Status: &nbsp;&nbsp;&nbsp;&nbsp;</b> Occupied</p>
-  //   <p><b>Table Capacity:&nbsp;&nbsp;&nbsp;&nbsp;</b>2</p>
-  //   </div>
-  //   <div className="reservation-buttons-container">
-  //   <FinishButton tableStatus={"Occupied"} table={{table_name: 'Name', table_id: 5, table_capacity: 2, reservation_id: 2}}/>
-  //   </div>
-  //   </div>
-  //   <div><hr/></div>
-
-    
-
-  //   </>
-  // )
+  
 }
 
 
@@ -233,7 +200,6 @@ function changeDayHandler(config){
   return (
     
     <main>
-      
      <div className="date-nav">
         <button className="date-nav-button" onClick={() => changeDayHandler("previous")}>Previous</button>
         <button className="date-nav-button" onClick={() => changeDayHandler("today")}>Today</button>
@@ -254,14 +220,9 @@ function changeDayHandler(config){
       setReservations={setReservations} 
       reservationsError={reservationsError} 
       setReservationsError={setReservationsError}/>
-
       <h3 className="list-title">Tables</h3>
-      
       <TablesDisplay/>
      
-     
-
-      
 </div>
     </main>
   );

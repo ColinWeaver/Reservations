@@ -72,9 +72,7 @@ reservationList={reservationList}
               />
 
             </label>
-        
-            {/* <button type="cancel" name="cancel" onClick={cancelHandler}>Cancel
-            </button> */}
+      
             {"  "}
             
           </form>
