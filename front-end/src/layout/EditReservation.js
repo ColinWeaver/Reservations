@@ -11,42 +11,41 @@ function EditReservation(){
       const [reservationTime, setReservationTime] = useState("");
       const [peopleCount, setPeopleCount] = useState(1);
       const [newReservation, setNewReservation] = useState("");
-      const [postError, setPostError] = useState(null);
+      const [error, setError] = useState(null);
       const [mobileNumber, setMobileNumber] = useState("");
       const useParam = useParams();
       const reservationId = useParam.reservation_id;
-      const [reservation, setReservation] = useState(null);//load current reservation
+      const [reservation, setReservation] = useState(null);
       const [formValuesSet, setFormValuesSet] = useState(false);
       const [redirectDate, setRedirectDate] = useState(null);
       const location = useLocation();
       const [address, setAddress] = useState(location);
       
-     
+     //----------------------------------------------RESET NEWRESERVATION OBJECT IF FETCH ERROR----------------------------------------------------------------------
       useEffect((() => {
-        if (postError) {
+        if (error) {
           setNewReservation(null);
         }
-      }),[postError]);
+      }),[error]);
   
-//------------------------------------FETCHES---------------------------------------------
-//get request for initial data
-//TEMPORARY COMMENTED OUT FOR STYLING!!!!!!!!!!!!!!!DO NOT DELETE!!!
+//------------------------------------GET FETCH TO LOAD RESERVATION---------------------------------------------
+
 if (!reservation ){
-  let requestConfig = {
+  let config = {
   redirectURL: `/reservations/${reservationId}/edit`,
   fetchURL: `/reservations/${reservationId}`
-  }
+  };
   return (
   <Requests
-  requestConfig={requestConfig}
-  setPostError={setPostError}
+  requestConfig={config}
+  setError={setError}
   setReservationList={setReservation}
   reservationList={reservation}
   />
   )
-  }
+  };
 
-   //PUT request to update reservation
+//------------------------------------POST FETCH TO /RESERVATIONS---------------------------------------------  
 if (newReservation){
   let redirectURL;
   if (!address.state){//test case tests for dashboard page 
@@ -56,9 +55,8 @@ if (newReservation){
      redirectURL = "/search"
   }
   else {
-    console.log(redirectDate, 'redirec date test')
     redirectURL = `/dashboard?date=${redirectDate}`
-  }
+  };
 
   let option = {
     method: 'PUT', 
@@ -70,17 +68,16 @@ let config = {
  option: option,
  fetchURL: `/reservations/${reservationId}`,
  redirectURL: redirectURL
-}
+};
 return (
 <Requests
 requestConfig={config}
-setPostError={setPostError}
+setError={setError}
 />
 )
-}
-//-------------------------------------------------------------------------
+};
+//------------------------------------SETTING INITIAL FORM VALUES---------------------------------------------
 
-  //set initial form values
   if (reservation && !formValuesSet){
     setRedirectDate(reservation.reservation_date.slice(0,10));//SETTING URL DATE FOR DASHBOARD REDIRECT
     setFirstName(reservation.first_name);
@@ -90,14 +87,13 @@ setPostError={setPostError}
     setReservationTime(reservation.reservation_time);
     setPeopleCount(reservation.people);
     setFormValuesSet(true);
-    
-  }
-//--------------------------------HANDLER FUNCTIONS-------------------------------------------
+  };
+//------------------------------------SUBMIT HANDLER---------------------------------------------
   
         function submitHandler(event){
           event.preventDefault();
           const reservationObject = {};
-          setPostError(null);
+          setError(null);
           reservationObject["first_name"] = firstName;
           reservationObject["last_name"] = lastName;
           reservationObject["mobile_number"] = mobileNumber;
@@ -105,9 +101,9 @@ setPostError={setPostError}
           reservationObject["reservation_time"] = reservationTime;
           reservationObject["people"] = Number(peopleCount);
           setNewReservation(reservationObject);
-        }
+        };
       
-
+//------------------------------------CHANGE HANDLER---------------------------------------------
         function changeHandler(event){
           event.preventDefault()
            if (event.target.name === "first_name"){
@@ -121,9 +117,9 @@ setPostError={setPostError}
               if ((event.target.value.length === 3) || (event.target.value.length === 7)) {
                 event.target.value += "-";
                 }
-             }
+             };
             setMobileNumber(event.target.value);
-           }
+           };
            if (event.target.name === "reservation_date"){
             setReservationDate(event.target.value);
           };
@@ -132,9 +128,9 @@ setPostError={setPostError}
           };
           if (event.target.name === "people"){
             setPeopleCount(event.target.value);
-          }
-        }
-
+          };
+        };
+//------------------------------------CANCEL HANDLER--------------------------------------------
         function cancelHandler(event){
           event.preventDefault();
           if (!address.state){
@@ -145,17 +141,16 @@ setPostError={setPostError}
           }
           else {
             history.push('/search')
-          }
-        }
+          };
+        };
 
 
-     
-
+//------------------------------------MAIN COMPONENT RENDER RETURN---------------------------------------------
          return (
             <>
             <div className="form-container">
               <h4>Edit Reservation</h4>
-              <ErrorAlert error={postError}/>
+              <ErrorAlert error={error}/>
               <form onSubmit={submitHandler}>
                 <label htmlFor="firstName" className="form-label">
                   First Name:&nbsp; &nbsp;
@@ -166,7 +161,6 @@ setPostError={setPostError}
                     placeholder="first name"
                     onChange={changeHandler}
                     value={firstName}
-                   
                   />
                 </label>
             
@@ -180,7 +174,6 @@ setPostError={setPostError}
                     placeholder="last name"
                     onChange={changeHandler}
                     value={lastName}
-                    
                   />
                 </label>
            
@@ -194,7 +187,6 @@ setPostError={setPostError}
                     onChange={changeHandler}
                     value={mobileNumber}
                     placeholder="000-000-0000"
-                    
                   />
                 </label>
             
@@ -207,7 +199,6 @@ setPostError={setPostError}
                     name="reservation_date"
                     onChange={changeHandler}
                     value={reservationDate}
-                    
                   />
                 </label>
              
@@ -220,7 +211,6 @@ setPostError={setPostError}
                     name="reservation_time"
                     onChange={changeHandler}
                     value={reservationTime}
-                   
                   />
                 </label>
           
@@ -250,10 +240,7 @@ setPostError={setPostError}
           )
          }
           
-        
-
-      
-      
+    
       export default EditReservation;
 
 

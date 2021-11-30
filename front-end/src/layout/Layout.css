@@ -1,12 +1,12 @@
 
-/*------------------------------POSITION-------------------------------------*/
+/*------------------------------LAYOUT-------------------------------------*/
 .menu {
 width: 100%;
 }
 .routes {
  margin-top: 50px;
 }
-/*---------------------------------------------------------------------------*/
+/*-------------------------------BODY--------------------------------------------*/
 
 body {
   font-family: helvetica;
@@ -21,7 +21,8 @@ main {
   max-width: 100%;
   align-items: center;
 }
-/*header ----------------------------------------------------------------------*/
+
+/*---------------------------------HEADER-------------------------------------*/
 header {
   display: flex;
   flex-direction: column;
@@ -69,6 +70,9 @@ nav ul {
   flex-direction: row;
   align-items: center;
   color: white;
+}
+
+.title a {
   text-decoration: none;
 }
 
@@ -84,25 +88,7 @@ nav ul li a:hover {
 nav ul li a {
   color: white;
 }
-/*------------------------------------------------LIST NAVIGATION----------------------------------------------------*/
 
-.clicked-button {
-  width: 100px;
-  height: 28px;
-  border-radius: 2%;
-  background-color: grey;
-  color: white;
-  border: 0px;
-}
-
-.unclicked-button {
-  width: 100px;
-  height: 28px;
-  border-radius: 2%;
-  background-color: #393a44;
-  color: white;
-  border: 0px;
-}
 
 /*-------------------------------------DATE NAVIGATION -----------------------------------*/
 .date-nav {
@@ -125,6 +111,7 @@ nav ul li a {
 }
 
 
+/*---------------------------------------------BUTTONS GENERAL------------------------------------------------------*/
 button:active {
 background-color: grey;
 }
@@ -161,64 +148,7 @@ padding: 50px;
 background-color:#f2f2f2;
 }
 
-
-/*--------------------------------FORMS ------------------------------*/
-
- .form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.search-form {
-  display: flex;
-  flex-direction: row;
- 
-}
-
-
-.find-button {
-  background-color: #393a44;
-  width: 70px;
-  color: white;
-  border-radius: 3px;
-  height: 30px;
-  width: 60px; 
-  border: 0px;
-}
-
-.cancel-form-button {
-  background-color: red;
-  border: 0px;
-  color: white;
-  width: 100px;
-  height: 30px;
-  border-radius: 3px;
-}
-
-.form-label, .form-select {
-  display: flex;
-  flex-direction: row;
-  margin-top: 20px;
-  justify-content: space-between;
-  height: 30px;
-}
-
-.form-select {
-  width: 150px;
-}
-
-.form-buttons {
-  margin-top: 20px;
-}
-/*------------------------------------------------------*/
-.clicked-menu-nav a {
-  color: grey;
-}
-
-/*-----------------------reservations----------------------------*/
-.reservation-buttons-container {
+.buttons-container {
   display: flex;
   flex-direction: row;
   color: white;
@@ -245,9 +175,67 @@ margin-right: 10px;
  border-radius: 3px;
 }
 
-.reservation-data-container {
+.list-data-container {
 display: flex;
 flex-direction: column;
 }
+
+/*---------------------------------------------SEARCH FORM------------------------------------------------------*/
+.search-form {
+  display: flex;
+  flex-direction: row;
+}
+
+
+.find-button {
+  background-color: #393a44;
+  width: 70px;
+  color: white;
+  border-radius: 3px;
+  height: 30px;
+  width: 60px; 
+  border: 0px;
+}
+
+
+/*---------------------------------------------GENERAL FORM STYLES------------------------------------------------------*/
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cancel-form-button {
+  background-color: red;
+  border: 0px;
+  color: white;
+  width: 100px;
+  height: 30px;
+  border-radius: 3px;
+}
+
+.form-label, .form-select {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  justify-content: space-between;
+  height: 30px;
+}
+
+.form-select {
+  width: 150px;
+}
+
+.form-buttons {
+  margin-top: 20px;
+}
+/*-------------------------MENU NAVIGATION-----------------------------*/
+.clicked-menu-nav a {
+  color: grey;
+}
+
+
+
 
 

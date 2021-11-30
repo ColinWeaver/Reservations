@@ -1,8 +1,8 @@
 const knex = require("../db/connection");
 
 function list(){
-     return knex('tables').select('*')
-     .orderBy('table_name');
+ return knex('tables').select('*')
+ .orderBy('table_name');
 }
 
 function create(newTable){
@@ -27,7 +27,7 @@ function update(reservationId, tableId){
       knex('reservations').select("*")
       .where({reservation_id: reservationId})
       .update({status: 'seated'}).transacting(trx)
-    ]).then(trx.commit).catch(trx.rollback).then((res) => 'seated').catch(console.error)
+    ]).then(trx.commit).catch(trx.rollback).then((res) => 'seated');
   })
   }
 
@@ -41,7 +41,7 @@ function destroy(tableId, reservationId, status){
       knex('reservations').select("*")
       .where({reservation_id: reservationId})
       .update({status: status}).transacting(trx)
-    ]).then(trx.commit).catch(trx.rollback).then((res) => status).catch(console.error)
+    ]).then(trx.commit).catch(trx.rollback).then((res) => status)
   })
 }
 

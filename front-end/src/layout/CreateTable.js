@@ -9,14 +9,15 @@ function CreateTable(){
       const [capacity, setTableCapacity] = useState(null);
       const [newTable, setNewTable] = useState(null);
       const [postError, setPostError] = useState(null);
-      let requestConfig;
     
+      //----------------------------------------------RESET NEWTABLE OBJECT IF FETCH ERROR----------------------------------------------------------------------
       useEffect((() => {
         if (postError) {
           setNewTable(null);
         }
       }),[postError]);
 
+       //----------------------------------------------------SUBMIT HANDLER----------------------------------------------------------------
         function submitHandler(event){
           event.preventDefault();
           setPostError(null);
@@ -26,6 +27,7 @@ function CreateTable(){
           setNewTable(tableObject);
         };
       
+        //---------------------------------------------------CHANGE HANDLER----------------------------------------------------------------
         function changeHandler(event){
           event.preventDefault()
            if (event.target.name === "table_name"){
@@ -36,37 +38,36 @@ function CreateTable(){
            };
         };
 
+        //----------------------------------------------------CANCEL HANDLER------------------------------------------------------------------
         function cancelHandler(event){
-          event.preventDefault()
+          event.preventDefault();
           history.goBack();
         }
-
-        let postRequestOption = {
+        let option = {
           method: 'POST', 
           credentials: 'same-origin',
           headers: {'Content-Type': 'application/json'}, 
           body: JSON.stringify({ data: newTable })
-        }
+        };
        if (newTable){
-       requestConfig = {
-       option: postRequestOption,
+       let config = {
+       option: option,
        redirectURL: `/dashboard`,
        fetchURL: "/tables"
-     }
+     };
       return (
       <Requests
-      requestConfig={requestConfig}
-      setPostError={setPostError}
+      requestConfig={config}
+      setError={setPostError}
       />
       )
-   }
-
+   };
+   //-------------------------------------------------------MAIN COMPONENT RENDER RETURN------------------------------------------------------------
          return (
             <>
             
             <div className="form-container">
               <h4>Add Table</h4>
-              
               <ErrorAlert error={postError}/>
 
               <form onSubmit={submitHandler} >
@@ -104,14 +105,10 @@ function CreateTable(){
                 </div>
               </form>
               </div>
-              
             </>
           )
          }
           
-        
-
-      
       
       export default CreateTable;
 

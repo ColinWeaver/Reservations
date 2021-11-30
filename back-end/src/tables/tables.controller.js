@@ -3,15 +3,14 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 
 function hasData(req, res, next){
-  
   const data = req.body.data;
   if (!data) next({status: 400, message: 'missing data'});
   res.locals.data = data;
   next();
 }
+
 //create validations-------
 function hasPropertiesCreate(req, res, next){
-
   const data = res.locals.data;
   const properties = Object.keys(data)
   const requiredProperties = ["table_name", "capacity"]

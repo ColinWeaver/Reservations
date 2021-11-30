@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-// import ErrorAlert from "./ErrorAlert"
 import Requests from "./Requests";
 
 
-function DisplayReservations({reservations, setReservations, setReservationsError, reservationsError}){
+function DisplayReservations({ reservations, setReservations, setReservationsError }){
 const [reservationId, setReservationId] = useState(null);
 const [cancelReservation, setCancelReservation] = useState(null);
 const [stopFetch, setStopFetch] = useState(null);
-const [reservationStatus, setReservationStatus] = useState(null);
-const [cancelFinished, setCancelFinished] = useState(null);
 const location = useLocation();
 
+
+//----------------------------------------------SET STATE VARIABLE TO BE ACCESSED BY OTHER COMPONENT VIA LINK----------------------------------------------------------------------
 let previousAddress;
 if (location.pathname.includes('search')) {
    previousAddress = location.pathname;
-}
+};
 
+//----------------------------------------------SEAT BUTTON----------------------------------------------------------------------
   function SeatButton({status, reservation_id}){
     if (status === "booked"){
       return (
@@ -26,56 +26,47 @@ if (location.pathname.includes('search')) {
       )
     }
     else return null;
-  }
+  };
 
 
-
+//----------------------------------------------CANCEL HANDLER----------------------------------------------------------------------
   function cancelHandler(event){
   event.preventDefault();
-  setReservationId(event.target.value)
-  const confirm = window.confirm("Do you want to cancel this reservation? This cannot be undone.")
+  setReservationId(event.target.value);
+  const confirm = window.confirm("Do you want to cancel this reservation? This cannot be undone.");
   if (confirm){
     setCancelReservation(true);
-    setStopFetch(false)
-  }
-}
-//-------------------------------------------------------------------------------------------
-   
+    setStopFetch(false);
+  };
+};
+//----------------------------------------------CANCEL RESERVATION FETCH----------------------------------------------------------------------
   //update status of reservation to cancelled and un-associate any table
 if (cancelReservation && !stopFetch){
-  // let redirectURL = "/"
-  // if (location.search){
-  //   redirectURL = `/dashboard?date=2021-11-19`
-  // }
-
-
-  let putRequestOption = {
+  let option = {
     method: 'PUT', 
     credentials: 'same-origin',
     headers: {'Content-Type': 'application/json'}, 
     body: JSON.stringify({ data: { status: "cancelled" } })
-  }
+  };
 let config = {
- option: putRequestOption,
- //redirectURL: "/dashboard",
+ option: option,
  fetchURL: `/reservations/${reservationId}/status`,
  fetchId: 3
-}
+};
 return (
 <Requests
 requestConfig={config}
-setPostError={setReservationsError}
-setCancelFinished={setCancelFinished}
+setError={setReservationsError}
 setReservations={setReservations}
 />
 )
-}
-
+};
+//----------------------------------------------EDIT BUTTON----------------------------------------------------------------------
 function EditButton({status, reservation_id}){
   function notBookedHandler(event){
     event.preventDefault();
     setReservationsError({message: 'You cannot edit an already seated reservation.'})
-  }
+  };
 if (status === 'booked'){
  return ( <Link to={{pathname: `/reservations/${reservation_id}/edit`, state: {prev: previousAddress}}}>
           <button className='edit-button'>Edit</button>
@@ -86,12 +77,16 @@ if (status === 'booked'){
    return (
    <button className="edit-button" onClick={notBookedHandler}>Edit</button>
  )
-   }
-}
+   };
+};
 
 
-  //-------------------------------------------------------------
+
+
+
+ //----------------------------------------------MAIN COMPONENT CONDITION FOR RENDER----------------------------------------------------------------------
     if (reservations && reservations.length > 0){
+
      return reservations.map((reservation) =>{
        let reservation_id = reservation.reservation_id;
        let status = reservation.status;
@@ -104,11 +99,12 @@ if (status === 'booked'){
           return `${hour}:${minute} PM`
         }
         else return `${hour}:${minute} AM`
-       }
+       };
        
+      //----------------------------------------------MAIN COMPONENT RENDER RETURN----------------------------------------------------------------------
         return (
         <div className="list-item">
-          <div className="reservation-data-container">
+          <div className="list-data-container">
           <p><b>Reservation ID: &nbsp;</b>{reservation.reservation_id}</p>
           <p data-reservation-id-status={reservation.reservation_id}> <b>Reservations Status:&nbsp;</b>{status} </p>
           <p><b>Last Name:&nbsp;</b>{reservation.last_name}</p>
@@ -118,7 +114,7 @@ if (status === 'booked'){
           <p><b>Reservation Time: &nbsp;</b>{time()}</p>
           <p><b>Number of People:&nbsp; </b>{reservation.people}</p>
           </div>
-          <div className="reservation-buttons-container">
+          <div className="buttons-container">
           <SeatButton status={status} reservation_id={reservation_id}/>
           <EditButton status={status} reservation_id={reservation_id}/>
           </div>

@@ -1,4 +1,3 @@
-//const { KnexTimeoutError } = require("knex");
 const knex = require("../db/connection");
 
 
@@ -6,7 +5,6 @@ function listByDate(date){
      return knex('reservations').select('*')
      .where({reservation_date: date, status: 'booked'})
      .orWhere({reservation_date: date, status: 'seated'})
-     //.whereNot({status: "finished"}).orWhereNot({status:"cancelled"})
      .orderBy('reservation_time');
 }
 
@@ -48,7 +46,7 @@ function removeTableAssociation(reservationId){
 function updateStatus(reservationId, status){
  return knex('reservations').select("*")
  .where('reservation_id', reservationId)
- .update({status: status}).then((value) => status).catch(console.error);
+ .update({status: status}).then((value) => status);
 }
 
 

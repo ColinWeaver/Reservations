@@ -6,14 +6,14 @@ const knex = require("./db/connection");
 knex.migrate
   .latest()
   .then((migrations) => {
-    console.log("migrations", migrations);
     app.listen(PORT, listener);
   })
   .catch((error) => {
-    console.error(error);
     knex.destroy();
   });
 
 function listener() {
-  console.log(`Listening on Port ${PORT}!`);
+  return null;
 }
+
+//I removed the logging in this file but kept the rest just in case

@@ -9,16 +9,8 @@ import CreateTable from "./CreateTable";
 import SeatReservation from "./SeatReservation";
 import Search from "./Search";
 import EditReservation from "./EditReservation";
-/**
- * Defines all the routes for the application.
- *
- * You will need to make changes to this file.
- *
- * @returns {JSX.Element}
- */
+
 function Routes() {
- 
-  
   return (
     <Switch>
       <Route exact={true} path="/">

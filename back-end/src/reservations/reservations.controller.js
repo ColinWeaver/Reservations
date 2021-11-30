@@ -1,10 +1,5 @@
-/**
- * List handler for reservation resources
- */
 const reservationsService = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
-
-
 
 
 //---------------------validation for CREATE and UPDATE--------------------------------
@@ -51,7 +46,7 @@ function lastName(req, res, next){
 
 function mobileNumber(req, res, next){
   const reservation = res.locals.reservations;
-const mobileNumber = reservation.mobile_number;
+  const mobileNumber = reservation.mobile_number;
   if (mobileNumber.length < 1){
     next({status: 400, message: `mobile_number property must not be empty`})
   }
@@ -62,8 +57,8 @@ const mobileNumber = reservation.mobile_number;
 
 function reservationDate(req, res, next){
   const reservation = res.locals.reservations;
-  const reservationDate = Date.parse(reservation.reservation_date);//note browser issues can
-  //result from using parse method
+  const reservationDate = Date.parse(reservation.reservation_date);
+  //note browser issues can result from using parse method
   if (!reservationDate){
     next({status: 400, message: 'reservation_date must be valid date and not empty'})
   }
@@ -75,7 +70,7 @@ function reservationDate(req, res, next){
 function validateFutureDate(req, res, next){
 const reservation = res.locals.reservations;
 let reservationDate =  new Date(reservation.reservation_date);
-//reservation Date if at month 01 and day 01 and mobing backwards to utc should 
+//reservation Date if at month 01 and day 01 and moving backwards to utc should 
 //be taken into account. it makes reservaiton Month = 0. 
 const reservationYear = reservationDate.getUTCFullYear().toString();
 const reservationMonth = reservationDate.getUTCMonth().toString();
@@ -86,8 +81,6 @@ const currentMonth = currentDate.getMonth().toString();
 const currentDay = currentDate.getDate().toString();
 currentDate = new Date(currentYear, currentMonth, currentDay);
 reservationDate = new Date(reservationYear, reservationMonth, reservationDay);
-
-
 const reservationDateMilliseconds = reservationDate.getTime();
 const currentDateMilliseconds = currentDate.getTime();
 if (reservationDateMilliseconds < currentDateMilliseconds){
@@ -118,7 +111,7 @@ function reservationTime(req, res, next){
   const reservationTimeHour = parseInt(reservation.reservation_time.substring(0,2));
   const reservationTimeColon = reservation.reservation_time.substring(2,3);
   const reservationTimeMin = parseInt(reservation.reservation_time.substring(3));
-  const currentDate = new Date();//set this current date variable to utc??
+  const currentDate = new Date();
   const currentHour = currentDate.getHours();
   const currentMinutes = currentDate.getMinutes();
  if ((!reservationTimeHour && reservationTimeHour > 0) || (reservationTimeColon !== ":") || (!reservationTimeMin && reservationTimeMin > 0)){
@@ -193,28 +186,6 @@ function finishedStatus(req, res, next){
     next();
 }
 
-// async function validatePreviousFetch(req, res, next){
-//   const reservation = res.locals.reservation;
-//   const reservationId = reservation.reservation_id;
-//   const status = reservation.status;//needs to be checking 
-//   const table = await reservationsService.readTables(reservationId);
-//   const tableOccupied = table[0];
-  
-//   if ((status === "seated") && !tableOccupied){
-   
-//     next({status: 400, message: 'Current status of reservation is seated yet no table is associated.'})
-//   }
-//   if ((status === "finished") && tableOccupied){
-//     next({status: 400, message: 'table is occupied yet reservation is finished.'})
-//   }
-//   if ((status === "booked") && tableOccupied){
-//     next({status: 400, message: 'current status for reservation is booked yet reservation is associated with a table'})
-//   }
-//   if ((status === 'canceled') && tableOccupied){
-//     next({status: 400, message: 'current status for reservation is canceled yet reservation is associated with table'})
-//   }
-//   next();
-// }
 
 //-------------------------------update----------------------------------------
 async function validReservation(req, res, next){
@@ -244,7 +215,6 @@ async function list(req, res) {
 async function create(req, res) {
    const newReservationData = res.locals.reservations;
    const response = await reservationsService.create(newReservationData);
-   console.log(response, 'response in create reservaitno')
   if (response[0]) res.status(201).json({ data: response[0] });
 }
 
@@ -272,7 +242,6 @@ async function update(req, res){
   const reservationId = res.locals.reservationId;
   const reservation = res.locals.reservations;
   const response = await reservationsService.update(reservationId, reservation);
-  console.log(response[0], 'update response')
   res.json({ data: response[0] });
 
 }

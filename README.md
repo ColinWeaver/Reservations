@@ -330,6 +330,7 @@ so that I can see which reservation parties are seated, and finished reservation
 
 #### Acceptance Criteria
 
+
 1. The `/dashboard` page will
    - display the status of the reservation. The default status is "booked"
      - the status text must have a `data-reservation-id-status={reservation.reservation_id}` attribute, so it can be found by the tests.

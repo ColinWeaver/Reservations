@@ -1,25 +1,18 @@
 import React, {useEffect, useState} from "react";
 import { Link, useLocation } from "react-router-dom";
 
-/**
- * Defines the menu for this application.
- *
- * @returns {JSX.Element}
- */
-
 function Menu() {
   const location = useLocation();
   const [dashboardClass, setDashboardClass] = useState(null);
   const [searchClass, setSearchClass] = useState(null);
   const [addReservationClass, setAddReservationClass] = useState(null);
   const [addTableClass, setAddTableClass] = useState(null);
-  // const [currentPage, setCurrentPage] = useState(null);
   
 
+  //------------------------------------SETTING STATE VARIABLES FOR STYLING MENU LINKS--------------------------------------------
   useEffect(() => {
     if (location.pathname === '/dashboard'){
       setDashboardClass('clicked-menu-nav');
-    
     }
     else if (location.pathname === '/search'){
       setSearchClass('clicked-menu-nav');
@@ -30,9 +23,8 @@ function Menu() {
     else {
       setAddTableClass('clicked-menu-nav');
     }
-
-
-    //unsetting other li classes back to default
+    
+    //unsetting other list classes back to default
     if (location.pathname !== '/dashboard'){
       setDashboardClass(null);
     }
@@ -46,9 +38,8 @@ function Menu() {
       setAddTableClass(null);
     }
   }, [dashboardClass, searchClass, addReservationClass, addTableClass, location.pathname]);
- console.log(location.pathname, 'location test')
  
-  
+ //------------------------------------MAIN COMPONENT RENDER RETURN---------------------------------------------
   return (
     <header>
      <div className="title">

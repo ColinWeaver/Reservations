@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { previous, today, next } from "../utils/date-time";
 import Requests from "../layout/Requests";
 import DisplayReservations from "../layout/DisplayReservations";
 
-/**
- * Defines the dashboard page.
- * @param date
- *  the date for which the user wants to view reservations.
- * @returns {JSX.Element}
- */
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
@@ -20,47 +13,69 @@ function Dashboard({ date }) {
   const queryDate = new URLSearchParams(address).get('date');
   const [reservationId, setReservationId] = useState(null);
   const [tables, setTables] = useState([]);
-  const [postError, setPostError] = useState(null);
+  const [error, setError] = useState(null);
   const [deleteSeating, setDeleteSeating] = useState(false);
   const [tableId, setTableId] = useState(null);
-  const [reRender, setReRender] = useState(false);
-  const [reservationStatus, setReservationStatus] = useState("booked");//seated, or finished
+  const [reservationStatus, setReservationStatus] = useState("booked");
   const [tablesError, setTablesError] = useState(null);
-  const [listsClass, setListsClass] = useState('lists');
-  const [reservationsButton, setReservationsButton] = useState('clicked-button');
-  const [tablesButton, setTablesButton] = useState('unclicked-button');
-  if (queryDate) {
+  const [reservationsFetched, setReservationsFetched] = useState(null);
+  //----------------------------------------------SET DATE TO URL QUERY ----------------------------------------------------------------------
+ 
+  if (queryDate){
     date = queryDate;
   }
+ 
 
+  //----------------------------------------------TABLES RELOAD TRIGGER----------------------------------------------------------------------
 
-
-//to trigger reload of tables
 useEffect(() => {
-  //   window.location.reload(false);
   setTableId(null);
   setDeleteSeating(false);
-  }, [tables])
+  }, [tables]);
 
  
-//------------------------------------load rendered data----------------------------------------------------------------------
-//reservations loads when date changes useffect. tables load when page renders no useEffect
-
-//load reservations
-  useEffect(loadDashboard, [date]);
-  function loadDashboard() {
-    setReservations([])
-    const abortController = new AbortController();
-    setReservationsError(null);
-    listReservations({ date }, abortController.signal)
-      .then(setReservations)
-      .catch(setReservationsError);
-    return () => abortController.abort();
-  }
+//----------------------------------------------RESERVATIONS RELOAD TRIGGER----------------------------------------------------------------------
 
 
-  //------------TEMPORARILY NOT RENDERING THIS DONT DELETE!!!--------------------------------------------------------------------------------------------
-  //load tables
+  useEffect(()=> {
+      setReservations([]);
+      setReservationsError(null);
+      setReservationsFetched(null);
+  }, [date]);
+  
+
+//----------------------------------------------FETCH TO LOAD RESERVATIONS----------------------------------------------------------------------
+
+  if (reservations && (reservations.length === 0) && !reservationsFetched){
+    let redirectURL;
+    let fetchURL;
+
+
+    if (queryDate){
+      redirectURL = `/dashboard?date=${date}`
+      fetchURL = `/reservations?date=${date}`
+    }
+    else {
+      redirectURL = '/dashboard'
+      fetchURL = '/reservations'
+    }
+    
+    let config = {
+      fetchURL: `/reservations?date=${date}`,
+      redirectURL: redirectURL,
+      fetchId: 10,
+    };
+   
+    return <Requests
+    requestConfig={config}
+    setError={setReservationsError}
+    setReservationList={setReservations}
+    reservationList={reservations}
+    setReservationsFetched={setReservationsFetched}
+    queryDate={queryDate}
+    />
+    }
+ //----------------------------------------------FETCH TO LOAD TABLES----------------------------------------------------------------------
   if (tables.length < 1){
     let redirectURL;
     if (queryDate) {
@@ -69,64 +84,61 @@ useEffect(() => {
     else {
       redirectURL = `/dashboard`
     }
-    let requestConfig = {
+    let config = {
       fetchURL: '/tables',
       redirectURL: redirectURL
-    }
+    };
     return <Requests 
-    requestConfig={requestConfig} 
-    setPostError={setPostError} 
+    requestConfig={config} 
+    setError={setError} 
     setTables={setTables}
     tables={tables}
     />
-  }
-//-------------------------------------Fetches to delete ---------------------------------------------
-  //delete seating
+  };
+//-------------------------------------FETCH TO /tables DELETE SEATING FROM TABLES------------------------------------------------------------------------
+  
   if (deleteSeating){
     let option = {
       method: 'DELETE', 
       credentials: 'same-origin',
       headers: {'Content-Type': 'application/json'}, 
       body: null
-    }
-    let requestConfig = {
+    };
+    let config = {
       option: option,
       fetchURL: `/tables/${tableId}/seat`,
       redirectURL: `/`
-    }
+    };
     return <Requests
-    requestConfig={requestConfig}
-    setPostError={setTablesError}
-    setReRender={setReRender}
+    requestConfig={config}
+    setError={setTablesError}
     setReservationStatus={setReservationStatus}
     reservationStatus={reservationStatus}
     tables={tables}
     setTables={setTables}
     />
-  }
-
-if ((reservationStatus === "finished") && !tablesError){
+  };
+//----------------------------------------------FETCH TO /reservations TO CHANGE STATUS----------------------------------------------------------------------
+if ((reservationStatus === "finished") && (!tablesError)){
     let option = {
       method: 'PUT', 
       credentials: 'same-origin',
       headers: {'Content-Type': 'application/json'}, 
       body: {data: {status: "finished"}}
-    }
-    let requestConfig = {
+    };
+    let config = {
       option: option,
       fetchURL: `/reservations/${reservationId}`,
       redirectURL: `/`
-    }
+    };
     return <Requests
-    requestConfig={requestConfig}
-    setPostError={setReservationsError}
-    setReRender={setReRender}
-
+    requestConfig={config}
+    setError={setReservationsError}
     />
-  }
+  };
 
 
-//-----------------------------------handler functions------------------------------------------------------------
+//-----------------------------------CHANGE DAY HANDLER------------------------------------------------------------
 function changeDayHandler(config){
   if (config === "previous"){
     history.push(`/dashboard?date=${previous(date)}`);
@@ -136,22 +148,21 @@ function changeDayHandler(config){
   }
   else {
     history.push(`/dashboard?date=${next(date)}`);
-  }
-}
+  };
+};
 
+//--------------------------------------FINISH TABLE HANDLER----------------------------------------------------------------------
   function finishTableHandler(event){
-    event.preventDefault()
-    setTableId(event.target.value)
+    event.preventDefault();
+    setTableId(event.target.value);
     const confirm = window.confirm('Is this table ready to seat new guests? This cannot be undone.')
     if (confirm){
-      console.log('deleteseating before', deleteSeating)
-      setDeleteSeating((value) => value = true);
-
+      setDeleteSeating(true);
     }
-  }
+  };
 
 
-  //rendered components below//-------------------------------------------------
+  //----------------------------------------------TABLES DISPLAY COMPONENT----------------------------------------------------------------------
   function TablesDisplay(){
     function FinishButton({tableStatus, table}){
       if (tableStatus === "Occupied"){
@@ -164,56 +175,51 @@ function changeDayHandler(config){
       )
       }
       else return null;
-    }
+    };
 
    if (tables.length > 0){
     return tables.map((table) => {
       let tableStatus = "Free"
       if (table.reservation_id){
-        tableStatus = "Occupied";
+        tableStatus = "Occupied"
       }
 
       return (
         <>
         <div className="list-item">
-          <div className='reservation-data-container'>
+        <div className='list-data-container'>
         <p><b>Table Name:&nbsp;</b>{table.table_name}</p>
         <p><b>Table ID: &nbsp;</b>{table.table_id}</p>
         <p data-table-id-status={table.table_id}> <b>Table Status: &nbsp;</b> {tableStatus}</p>
         <p><b>Table Capacity:&nbsp;</b>{table.capacity}</p>
         </div>
-        <div className="reservation-buttons-container">
+        <div className="buttons-container">
         <FinishButton tableStatus={tableStatus} table={table}/>
         </div>
         </div>
         <div><hr/></div>
        </>
       )
-    })
+    });
   }
   else return null;
-  
-}
-
-
-
+};
+//---------------------------------------------MAIN COMPONENT RENDER RETURN--------------------------------------------------------------------
   return (
-    
-    <main>
+  <main>
      <div className="date-nav">
         <button className="date-nav-button" onClick={() => changeDayHandler("previous")}>Previous</button>
         <button className="date-nav-button" onClick={() => changeDayHandler("today")}>Today</button>
         <button className="date-nav-button" onClick={() => changeDayHandler("next")}>Next</button>
-    </div>
+     </div>
 
-    <div className="errors">
+     <div className="errors">
       <ErrorAlert error={reservationsError} />
-      <ErrorAlert error={postError}/>
-   </div>
+      <ErrorAlert error={error}/>
+     </div>
 
-      <div className={listsClass}>
+     <div className="lists">
       <h3 className="list-title">Reservations for {date} </h3>
-  
       <DisplayReservations 
       queryDate={queryDate} 
       reservations={reservations} 
@@ -222,10 +228,9 @@ function changeDayHandler(config){
       setReservationsError={setReservationsError}/>
       <h3 className="list-title">Tables</h3>
       <TablesDisplay/>
-     
-</div>
-    </main>
-  );
-}
+    </div>
+ </main>
+  )}
+
 
 export default Dashboard;

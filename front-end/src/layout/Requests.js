@@ -3,26 +3,23 @@ import { useHistory } from "react-router-dom";
 
 
 function Requests(props){
-  //variables
+  const controller = new AbortController();
+
     const {
       requestConfig, 
-      setPostError, 
+      setError, 
       setTables,
       tables, 
-      setReservations, 
-      setReRender,
-      setReservationStatus,
-      reservationStatus,
       setReservationList,
       reservationList,
       setReservationsFetch,
       setPreStop,
       setUpdatedTable,
-      updatedTable,
-      setCancelFinished,
-      
-  
+      setReservationsFetched,
+    
     } = props;
+
+    //----------------------------------------------ASSIGNING LOCAL VARIABLES----------------------------------------------------------------------
     const history = useHistory();
     let option;
     let redirectURL;
@@ -30,111 +27,126 @@ function Requests(props){
     let fetchId;
     if (requestConfig.option){
       option = requestConfig.option;
-    }
+    };
     if (requestConfig.redirectURL){
       redirectURL = requestConfig.redirectURL;
-    }
+    };
     if (requestConfig.fetchURL){
       fetchURL = requestConfig.fetchURL;
-    }
+    };
     if (requestConfig.fetchId){
-      
       fetchId = requestConfig.fetchId;
-    }
+    };
 
-    //------------------------------------setting url for fetch------------------------------------------
+  
+    //------------------------------------SETTING URL FOR FETCH------------------------------------------
     const API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
     const url = new URL(`${API_BASE_URL}${fetchURL}`);
 
-    //---------------------------------------fetch useEffect--------------------------------
+    //---------------------------------------FETCH USEEFFECT--------------------------------
         useEffect(() => {
-         //fetch to reservations seems to retrigger the condition fetch reservations variable
-         //that it is based on without setting postError
-         //no conditin fits with the fetch to reservations so it is redirecting and continually running
+        
           async function request(){
             let fetchReturn;
             try {
-              fetchReturn = await fetch(url, option);
+              //load reservations in dash
+              if (fetchId === 10){
+                fetchReturn = await fetch(url, {signal: controller.signal});
+                
+
+                if ((fetchReturn) && reservationList.length === 0) {
+                fetchReturn = await fetchReturn.json();
+                setReservationList(fetchReturn.data);
+                setReservationsFetched(true);
+                history.push(redirectURL)
+                }
+              }
+
+           //primary fetch load for all others
+              fetchReturn = await fetch(url, option)
+              
+              //--------------------------------------------FETCH NOT OK---------------------------
+              
               if (!fetchReturn.ok) {
-                console.log("tst in failed fetch")
                 if (setTables){
                   setTables([]);
                 }
                 let promiseObject = await fetchReturn.json();
                 let errorMessage = await promiseObject.error;
                 let errorObject = { message: errorMessage };
-                setPostError(errorObject);
-                
+                setError(errorObject);
+
                 if (fetchId === 1) {
                   
                   setUpdatedTable(null);
                   setReservationsFetch(true);
                 }
-
-                //dont have post error as condition for reuqest if setting here in child
-                //need to redirect or else it will also set condition to run next fetch
               }
-
+               //--------------------------------------------SUCCESSFUL FETCH---------------------------
+              
               else {
-                console.log("test good fetch")
-               
                 fetchReturn = await fetchReturn.json();
                 
-               if (setPreStop) setPreStop(true)
-                //have some condition here to keep fetch to reservations from rendering
+               if (setPreStop) {
+                 setPreStop(true);
+               }
+
+               //SET TABLES
                 if (setTables) {
                   if (tables.length === 0){
-                  setTables(fetchReturn.data);
+                  setTables(fetchReturn.data)
                   }
                   else {
-                    setTables([])
+                    setTables([]);
                   }
                 }
+
+                //SETRESERVATIONS IN SEARCH
                 if (setReservationList) {
                   if (!reservationList){
                   setReservationList(fetchReturn.data);
-                  }
-                }
-               // if (setReRender) setReRender(true);
+                  };
+                };
 
-                // if (setReservationStatus) {
-                //   if (reservationStatus === "seated"){
-                //     setReservationStatus("finished")
-                //   }
-                //   else {
-                //     setReservationStatus("seated")
-                //   }
-                // }
+
                 if (fetchId === 1){
-                 
                   setUpdatedTable(null);
                   setReservationsFetch(true);
-                  
-                  //updated table as not null!! why????
-                
+                };
 
-                }
+
                 if (fetchId === 3){
+                  history.go(0);
+                };
+
                 
-                  //setReservations([])
-                  history.go(0)
-                  //setCancelFinished(true);
-                }
                 if (redirectURL) {
                   history.push(redirectURL);
-                  
                 }
               }
-            }
+              if (!redirectURL && (fetchId !== 3)) {
+                history.goBack();
+              };
+            
+          }
+
+
             catch(error){
               console.log(error);
-            };
-           };
+            }
+           }
           request();
-          if (!redirectURL && (fetchId !== 3)) history.goBack();
-          }, [tables, requestConfig, setReservationsFetch, setPostError, setUpdatedTable]);
-//---------------------------------------------------
+         
+
+        
+
+          return () => {
+            controller.abort()
+          };
+          
+          }, [tables, requestConfig, setReservationsFetch, setError, setUpdatedTable]);
+//----------------------------------------------------------------------------------------------
         return null;
 }
 

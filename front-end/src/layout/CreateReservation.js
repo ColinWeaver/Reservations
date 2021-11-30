@@ -13,14 +13,16 @@ function CreateReservation(){
       const [newReservation, setNewReservation] = useState("");
       const [postError, setPostError] = useState(null);
       const [mobileNumber, setMobileNumber] = useState("");
-      let requestConfig;
+     
 
+      //----------------------------------------------RESET NEWRESERVATION OBJECT IF FETCH ERROR----------------------------------------------------------------------
       useEffect((() => {
         if (postError) {
           setNewReservation(null);
-        }
+        };
       }),[postError]);
 
+      //----------------------------------------------SUBMIT HANDLER----------------------------------------------------------------------
         function submitHandler(event){
           event.preventDefault();
           const reservationObject = {};
@@ -32,9 +34,9 @@ function CreateReservation(){
           reservationObject["reservation_time"] = reservationTime;
           reservationObject["people"] = Number(peopleCount);
           setNewReservation(reservationObject);
-        }
+        };
       
-
+      //----------------------------------------------CHANGE HANDLER---------------------------------------------------------------------
         function changeHandler(event){
           event.preventDefault()
            if (event.target.name === "first_name"){
@@ -60,40 +62,38 @@ function CreateReservation(){
           if (event.target.name === "people"){
             setPeopleCount(event.target.value);
           }
-        }
+        };
 
+        //----------------------------------------------CANCEL HANDLER----------------------------------------------------------------------
         function cancelHandler(){
           history.push("/")
-        }
+        };
 
-      
-         let postRequestOption = {
+        //----------------------------------------------POST FETCH TO /RESERVATIONS----------------------------------------------------------------------
+         let option = {
                 method: 'POST', 
                 credentials: 'same-origin',
                 headers: {'Content-Type': 'application/json'}, 
                 body: JSON.stringify({ data: newReservation })
-              }
+              };
          if (newReservation){
-           
-           requestConfig = {
-             option: postRequestOption,
+           let config = {
+             option: option,
              redirectURL: `/dashboard?date=${newReservation.reservation_date}`,
              fetchURL: "/reservations"
-           }
+           };
             return (
             <Requests
-            requestConfig={requestConfig}
-            setPostError={setPostError}
+            requestConfig={config}
+            setError={setPostError}
             />
             )
-         }
+         };
 
-         
+         //----------------------------------------------MAIN COMPONENT RENDER RETURN----------------------------------------------------------------------
          return (
             <>
-            
             <div className="form-container">
-
               <h4>Add Reservation</h4>
               <ErrorAlert error={postError}/>
               <form onSubmit={submitHandler}>
@@ -106,10 +106,8 @@ function CreateReservation(){
                     placeholder="first name"
                     onChange={changeHandler}
                     value={firstName}
-                   
                   />
                 </label>
-            
 
               <label htmlFor="lastName" className="form-label">
                   Last Name:&nbsp; &nbsp;
@@ -133,11 +131,9 @@ function CreateReservation(){
                     onChange={changeHandler}
                     value={mobileNumber}
                     placeholder="000-000-0000"
-                    
                   />
                 </label>
              
-
               <label htmlFor="date" className="form-label">
                   Date:&nbsp; &nbsp;
                   <input
@@ -146,11 +142,9 @@ function CreateReservation(){
                     name="reservation_date"
                     onChange={changeHandler}
                     value={reservationDate}
-                    
                   />
                 </label>
              
-
               <label htmlFor="time" className="form-label">
                   Time:&nbsp; &nbsp;
                   <input
@@ -159,7 +153,6 @@ function CreateReservation(){
                     name="reservation_time"
                     onChange={changeHandler}
                     value={reservationTime}
-                   
                   />
                 </label>
              
@@ -174,8 +167,6 @@ function CreateReservation(){
                     value={peopleCount}
                   />
                 </label>
-            
-            
                 <div className="form-buttons">
                 <button className="cancel-form-button" type="cancel" onClick={cancelHandler}>Cancel
                 </button>
@@ -184,15 +175,11 @@ function CreateReservation(){
                   Submit
                 </button>
                 </div>
-                
               </form>
             </div>
             </>
           )
          }
-          
-        
-
       
       
       export default CreateReservation;
