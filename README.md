@@ -1,4 +1,4 @@
-# [Restaurant Reservation System](https://reservations-front-end.herokuapp.com/dashboard)
+# [Reservations](https://reservations-front-end.herokuapp.com/dashboard)
  
  ---------------------------------------------------------------------------------------------------------------
 ## Summary:
