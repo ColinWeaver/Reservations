@@ -1,6 +1,6 @@
 # Restaurant Reservation System 
  
-## Link: "[Link to app](https://reservations-front-end.herokuapp.com/dashboard)"
+## [Link to app](https://reservations-front-end.herokuapp.com/dashboard)
 
 "[link](https://reservations-front-end.herokuapp.com)"
    
