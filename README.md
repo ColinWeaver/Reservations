@@ -2,8 +2,8 @@
  
 ## Link: [Link to app](`https://reservations-front-end.herokuapp.com/dashboard`)
 # LINK: [link]('https://reservations-front-end.herokuapp.com')
- [link]('https://reservations-front-end.herokuapp.com')
-
+ "[link]""('https://reservations-front-end.herokuapp.com')"
+ "[link]""(https://reservations-front-end.herokuapp.com)"
 
 ## Summary:
 
