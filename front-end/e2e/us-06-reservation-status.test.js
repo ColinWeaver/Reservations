@@ -52,9 +52,9 @@ describe("US-06 - Reservation status - E2E", () => {
     });
 
 
-    //------------------------------------------------------------------------------
+    
     test("/dashboard displays status", async () => {
-      console.log(reservation, table, 'test for reservation, table in test file')
+      
       await page.screenshot({
         path: ".screenshots/us-06-dashboard-displays-status.png",
         fullPage: true,
@@ -69,7 +69,7 @@ describe("US-06 - Reservation status - E2E", () => {
 
 
 
-    //----------------------------------------------------------------------------
+    
     test("Seating the reservation changes status to 'seated' and hides Seat button", async () => {
       await page.screenshot({
         path: ".screenshots/us-06-seated-before.png",

@@ -1,18 +1,90 @@
-# Restaurant Reservation System 
+# [Restaurant Reservation System](https://reservations-front-end.herokuapp.com/dashboard)
  
-## [Link to app](https://reservations-front-end.herokuapp.com/dashboard)
-
-"[link](https://reservations-front-end.herokuapp.com)"
-   
-   
+ ---------------------------------------------------------------------------------------------------------------
 ## Summary:
+This app allows you to manage restaurant reservations by creating tables and reservations and modifying the associations between them and the statuses of the reservations and tables. After creating a reservation you can edit it, seat it at a table, and cancel it. After creating a table you can finish a seating if a reservation is seated at it. Each table has a status of either: 'Free' or 'Occupied'. Each reservation has a status of either: 'booked', 'seated', or 'finished.' There is also a search page where you can search through the reservations by phone number. All reservations display a 'Cancel' button and depending on their status, reservations display 'Seat' and 'Edit' buttons. Depending on their status, a table displays a 'Finish' button.
 
+
+## FURTHER DETAILS:
+### This application is used to create restaurant reservations and assign/track tables for them. The apps functionality includes the ability to:
+1. create reservations
+1. edit reservations
+1. create tables
+1. seat reservations at a table
+1. finish a reservation's seating at a table
+1. cancel a reservation
+
+### The following are the pages displayed while using the app: 
+-Every page displays the menu at the top which allows you to navigate to the primary pages: Dashboard, Search, Create Reservation, Create Table. Through links in some of the previous pages you can access the following pages: Edit Reservation, Edit Table, Seat Reservation.
+-Complete list of pages in the app: Dashboard, Search, Create Reservation, Create Table, Edit Reservation, Seat Reservation.
+-Links in the app include: Finish Reservation, Cancel Reservation,  
+
+
+#### Dashboard: 
+-This is the first page opened while using the app. It displays a list of reservations for the current day (if any) and a list of any tables. Above the lists it displays 3 nagivation buttons to navigate through different dates and view any reservations assigned to those days.
+##### For each reservation listed, there is a:
+ -Cancel Button: Clicking this button changes the status of the reservation to "canceled". 
+
+ -Seat Button: This button is only displayed if the reservation status is "booked". A reservation can have a status of 'booked', 'seated', 'finished', and 'canceled'. 
+
+ -Edit Button: This button takes you to the 'edit reservation' page and allows you to modify the reservation.
+##### For each table listed, there is a:
+ -Finish Button: This button is only displayed if the table status is 'Occupied' which means it has a reservation associated with it. 
+
+#### Search: 
+-This page displays a search bar (to input a number) and 'Find' button to submit the search. When you click the find button it displays a list of reservations with phone numbers containing the input numbers. The same buttons can be found in the listed reservations displayed on this page as the ones displayed in the dashboard page.
+
+#### Create Reservation:
+-This page displays a form that allows you to input and save the required data for the reservation. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the reservation and a 'Cancel' button that takes you back to previous page. 
+
+#### Create Table:
+-This page displays a form that allows you to input and save the required data for the table. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the table and a 'Cancel' button that takes you back to previous page. 
+
+#### Edit Reservation:
+-You access this page by clicking the 'Edit' button displayed on a reservation with a status of 'booked.' This page displays a form that contains data from previous reservation and that allows you to modify the required data for the reservation. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the reservation and a 'Cancel' button that takes you back to previous page. 
+
+#### Seat Reservation:
+-This page displays a drop down menu of the tables and allows you to select one of them to assign the reservation to. You access this page via the "Seat" button listed on reservations with a status of 'booked.' When a table is selected you press the "Submit" button to change the status of the table to 'Occupied' and the reservation status to 'Seated'. If you press the 'Cancel' button it takes you to the previous page. 
+
+
+ ---------------------------------------------------------------------------------------------------------------
 ## API: 
+The API consists of a various routes to '/reservations' and '/tables'.
+
+### /reservations routes:
+1. /reservations?date={0000-00-00}
+-LIST: This route responds with a list of reservations that have reservation_date matching the query date sorted by time.
+
+1. /reservations
+-CREATE: This route receives a new reservation object in the request body and responds with the new reservation object once it has been successfully created.
+
+1. /reservations/:reservation_id
+-READ: This route responds with a reservation whose reservation_id matches the reservation_id passed in route param.
+-UPDATE: This route recieves an updated reservation object in the request body and responds with the updated reservation object when the reservation has been successfully updated. 
+
+1. /reservations/:reservation_id/status: 
+-UPDATE: This route recieves a status in the request body and responds with the updated status when the reservation's status has been successfully updated. 
+
+### /tables routes:
+1. /tables
+-LIST: This route responds with a list of all tables sorted in ascending order by table_name.
+-CREATE: This route recieves a table object in the request body and responds with the table object when the table has been successfully created. 
+
+1. /tables/:table_id/seat:
+-UPDATE: This route recieves an updated table status in the request body and updates the status of the table whose table_id matches the table_id in the param as well as the status of the reservation now associated to the table. It then responds with the same status as the request body when the status of the table has been successfully updated. 
+-DELETE: This route updates the reservation_id column of the table whose table_id matches the table_id in the param so it no longer has an associated reservation and also sets the status of the reservation that was associated with that table to 'finished.' It responds with 'finished'.
 
 
-## Technologies:
-1. 
+ ---------------------------------------------------------------------------------------------------------------
+## Technologies Used:
 
+1. Frontend:
+-I used React to develop the app in JavaScript and used various React libraries and features. For styling I used CSS flexbox heavily (the project's styling code also contains some boostrap classes already present in the starter code).
+
+1. Backend:
+-I used Express to develop the API. I developed the routes using JavaScript and used the Knex library to query the PostgreSQL database. I also used the Knex library to develop the seed and migration files. 
+
+ ---------------------------------------------------------------------------------------------------------------
 ## Installation: 
 1. Fork and clone this repository.
 1. Run `cp ./back-end/.env.sample ./back-end/.env`.
@@ -37,107 +109,6 @@
 
 
 
-----------------------------------------------------------------------------------------------------------------------------
-## Existing files
-
-This repository is set up as a *monorepo*.
-
-
-| Folder/file path | Description                                                      |
-| ---------------- | ---------------------------------------------------------------- |
-| `./back-end`     | The backend project, which runs on `localhost:5000` by default.  |
-| `./front-end`    | The frontend project, which runs on `localhost:3000` by default. |
-
-This starter code closely follows the best practices and patterns established in the Robust Server Structure module.
-
-
-
-The table below describes the existing files in the `./back-end` folder:
-
-| Folder/file path                                         | Description                                                                                                         |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `./back-end/knexfile.js`                                 | The Knex configuration file. You will not need to make changes to this file.                                        |
-| `./back-end/src/app.js`                                  | Defines the Express application and connects routers.                                                               |
-| `./back-end/src/db/connection.js`                        | The Knex connection file. You will not need to make changes to this file.                                           |
-| `./back-end/src/db/migrations`                           | The Knex migrations folder.                                                                                         |
-| `./back-end/src/db/seeds/`                               | The Knex seeds folder.                                                                                              |
-| `./back-end/src/errors/errorHandler.js`                  | Defined an Express API error handler.                                                                               |
-| `./back-end/src/errors/notFound.js`                      | Defined an Express API "not found" handler.                                                                         |
-| `./back-end/src/reservations/reservations.controller.js` | A controller for the reservations resource.                                                                         |
-| `./back-end/src/reservations/reservations.router.js`     | A router for the reservations resource.                                                                             |
-| `./back-end/src/server.js`                               | Defines the node server.                                                                                            |
-| `./back-end/test`                                        | A folder that contains all of the integration tests. You will not need to make changes to the files in this folder. |
-| `./back-end/vercel.json`                                 | A vercel deployment configuration file. You will not need to make changes to this file.                             |
-
-### Frontend Existing files
-
-The `./front-end` folder contains all the code for the frontend project.
-
-The table below describes the existing files in the `./front-end` folder:
-
-| Folder/file path                                   | Description                                                                                            |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `./front-end/e2e`                                  | Contains all of the end-to-end tests. You will not need to make changes to the files in this folder.   |
-| `./front-end/jest-puppeteer.config.js`             | A configuration file used by the end-to-end tests. You will not need to make changes to this file.     |
-| `./front-end/src/App.js`                           | Defines the root application component. You will not need to make changes to this file.                |
-| `./front-end/src/App.test.js`                      | Contains the tests for the root application component. You will not need to make changes to this file. |
-| `./front-end/src/dashboard/Dashboard.js`           | Defines the Dashboard page.                                                                            |
-| `./front-end/src/index.js`                         | The main entry point for the React application.                                                        |
-| `./front-end/src/layout/ErrorAlert.js`             | Defines an error alert component that display only when an error is specified.                         |
-| `./front-end/src/layout/Layout.css`                | The css for the Layout component.                                                                      |
-| `./front-end/src/layout/Layout.js`                 | Defines the main layout of the application.                                                            |
-| `./front-end/src/layout/Menu.js`                   | Defines the menu for the application.                                                                  |
-| `./front-end/src/layout/NotFound.js`               | Defines the "Not found" component that is displayed when no route matches.                             |
-| `./front-end/src/layout/Routes.js`                 | Defines all the routes for the application.                                                            |
-| `./front-end/src/utils/api.js`                     | Defines the functions used to access the backend API                                                   |
-| `./front-end/src/utils/date-time.js`               | Defines functions to format date and time strings.                                                     |
-| `./front-end/src/utils/format-reservation-date.js` | Defines a function to format the date on a single reservation or an array of reservations.             |
-| `./front-end/src/utils/format-reservation-time.js` | Defines a function to format the time on a single reservation or an array of reservations.             |
-| `./front-end/src/utils/useQuery.js`                | Defines a custom hook to parse the query parameters from the URL.                                      |
-
-
-
-## Installation
-
-1. Fork and clone this repository.
-1. Run `cp ./back-end/.env.sample ./back-end/.env`.
-1. Update the `./back-end/.env` file with the connection URL's to your ElephantSQL database instance.
-1. Run `cp ./front-end/.env.sample ./front-end/.env`.
-1. You should not need to make changes to the `./front-end/.env` file unless you want to connect to a backend at a location other than `http://localhost:5000`.
-1. Run `npm install` to install project dependencies.
-1. Run `npm run start:dev` to start your server in development mode.
-
-
-
-
-
-
-----------------------------------------------------------------------------------------------------
-### US-01 Create and list reservations
-
-As a restaurant manager<br/>
-I want to create a new reservation when a customer calls<br/>
-so that I know how many customers will arrive at the restaurant on a given day.
-
-#### Acceptance Criteria
-
-1. The `/reservations/new` page will
-   - have the following required and not-nullable fields:
-     - First name: `<input name="first_name" />`
-     - Last name: `<input name="last_name" />`
-     - Mobile number: `<input name="mobile_number" />`
-     - Date of reservation: `<input name="reservation_date" />`
-     - Time of reservation: `<input name="reservation_time" />`
-     - Number of people in the party, which must be at least 1 person. `<input name="people" />`
-   - display a `Submit` button that, when clicked, saves the new reservation, then displays the `/dashboard` page for the date of the new reservation
-   - display a `Cancel` button that, when clicked, returns the user to the previous page
-   - display any error messages returned from the API
-1. The `/dashboard` page will
-   - list all reservations for one date only. (E.g. if the URL is `/dashboard?date=2035-12-30` then send a GET to `/reservations?date=2035-12-30` to list the reservations for that date). The date is defaulted to today, and the reservations are sorted by time.
-   - display next, previous, and today buttons that allow the user to see reservations on other dates
-   - display any error messages returned from the API
-1. The `/reservations` API will have the same validations as above and will return 400, along with an informative error message, when a validation error happens.
-   - seed the reservations table with the data contained in `./back-end/src/db/seeds/00-reservations.json`
 
 
 

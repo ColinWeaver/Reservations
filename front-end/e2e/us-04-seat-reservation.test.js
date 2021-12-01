@@ -26,7 +26,7 @@ describe("US-04 - Seat reservation - E2E", () => {
 
 
 
-  //tables/new page describe
+ 
   describe("/tables/new page", () => {
     beforeEach(async () => {
       page = await browser.newPage();
@@ -36,37 +36,37 @@ describe("US-04 - Seat reservation - E2E", () => {
     });
 
 
-    //CHECK THAT TABLE IS CREATED
+    
     test("filling and submitting form creates a new table", async () => {
-      console.log('test for create table: 1 ')
+     
       const tableName = `#${Date.now().toString(10)}`;
       await page.type("input[name=table_name]", tableName);
-      console.log('test for create table: 2 ')
+      
       await page.type("input[name=capacity]", "6");
-      console.log('test for create table: 3 ')
+      
       await page.screenshot({
         path: ".screenshots/us-04-create-table-submit-before.png",
         fullPage: true,
       });
-      console.log('test for create table: 4 ')
+      
       await Promise.all([
         page.click("button[type=submit]"),
         page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
-      console.log('test for create table: 5 ')
+      
       await page.screenshot({
         path: ".screenshots/us-04-create-table-submit-after.png",
         fullPage: true,
       });
-      console.log('test for create table:  6')
+      
       await expect(page).toMatch(tableName);
-      console.log("test in create table: 7")
+      
 
     });
 
 
 
-//create table validation
+
     test("omitting table_name and submitting does not create a new table", async () => {
       await page.type("input[name=capacity]", "3");
       await page.screenshot({
@@ -82,7 +82,7 @@ describe("US-04 - Seat reservation - E2E", () => {
     });
     
 
-//create table validation
+
     test("entering a single character table_name and submitting does not create a new table", async () => {
       await page.type("input[name=table_name]", "1");
       await page.type("input[name=capacity]", "6");
@@ -99,7 +99,7 @@ describe("US-04 - Seat reservation - E2E", () => {
     });
     
 
-//create table validation
+
     test("omitting capacity and submitting does not create a new table", async () => {
       await page.type("input[name=table_name]", "Omit capacity");
       await page.screenshot({
@@ -115,41 +115,41 @@ describe("US-04 - Seat reservation - E2E", () => {
     });
 
 
-//RETURNS TO PREVIOUS PAGE TEST!!!!!!!
+
     test("canceling form returns to previous page", async () => {
       await page.goto(`${baseURL}/reservations/new`, {
         waitUntil: "networkidle0",
       });
-      console.log("test in return to previous page: 1")
+      
       await page.goto(`${baseURL}/tables/new`, {
         waitUntil: "networkidle0",
       });
-      console.log("test in return to previous page:2 ")
+      
       const [cancelButton] = await page.$x(
         "//button[contains(translate(., 'ACDEFGHIJKLMNOPQRSTUVWXYZ', 'acdefghijklmnopqrstuvwxyz'), 'cancel')]"
       );
-      console.log("test in return to previous page: 3")
+      
       if (!cancelButton) {
         throw new Error("button containing cancel not found.");
       }
-      console.log("test in return to previous page: 4")
+      
       await page.screenshot({
         path: ".screenshots/us-04-create-table-cancel-before.png",
         fullPage: true,
       });
-      console.log("test in return to previous page: 5")
+      
       await Promise.all([
         cancelButton.click(),
         page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
-      console.log("test in return to previous page: 6")
+      
       await page.screenshot({
         path: ".screenshots/us-04-create-table-cancel-after.png",
         fullPage: true,
       });
-      console.log("test in return to previous page: 7")
+      
       expect(page.url()).toContain("/reservations/new");
-      console.log("test in return to previous page: 8")
+      
     });
   });
 

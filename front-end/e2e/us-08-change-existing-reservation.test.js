@@ -40,8 +40,7 @@ describe("US-08 - Change an existing reservation - E2E", () => {
     await browser.close();
   });
 
-  //----------------------------------------------------------------------------------------
-  //------------------------------------------------------------------------------------------
+  
   describe("/dashboard page", () => {
     beforeEach(async () => {
       await page.goto(dashboardTestPath, {
@@ -49,7 +48,7 @@ describe("US-08 - Change an existing reservation - E2E", () => {
       });
     });
 
-    //-----------------------------------------------------------------------------
+    
     describe("reservation edit link", () => {
 
       test("goes to the /reservations/:reservation_id/edit page", async () => {
@@ -142,7 +141,7 @@ describe("US-08 - Change an existing reservation - E2E", () => {
 
 
     test("canceling form returns to the previous page", async () => {
-      console.log('test in canceing form test in test file!!!!!!')
+      
       const [cancelButton] = await page.$x(
         "//button[contains(translate(., 'ACDEFGHIJKLMNOPQRSTUVWXYZ', 'acdefghijklmnopqrstuvwxyz'), 'cancel')]"
       );
@@ -165,7 +164,7 @@ describe("US-08 - Change an existing reservation - E2E", () => {
     });
 
 
-//FAILING TEST!!!!!!!!!!!!!!
+
     test("filling and submitting form updates the reservation", async () => {
       const firstNameInput = await page.$("input[name=first_name]");
       await firstNameInput.click({ clickCount: 3 });
@@ -180,12 +179,12 @@ describe("US-08 - Change an existing reservation - E2E", () => {
         path: ".screenshots/us-08-edit-reservation-submit-before.png",
         fullPage: true,
       });
-      console.log(page, 'page test in test file 8')
+     
       await Promise.all([
         submitButton.click(),
         page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
-      console.log(page, 'page test in test file 8')
+      
       expect(page.url()).toContain("/dashboard");
       await page.screenshot({
         path: ".screenshots/us-08-edit-reservation-submit-after.png",
