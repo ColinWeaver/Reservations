@@ -22,12 +22,10 @@ This app allows you to manage restaurant reservations by creating tables and res
 
 
 #### Dashboard: 
-
-file:///Users/colinweaver/Desktop/Reservations-screenshots/Dashboard%20Page.png
-
-
+![Dashboard-Page](https://user-images.githubusercontent.com/81534398/144499852-c28f0e1b-07a9-4f32-b5f4-4e02f7e4dee7.png)
 - This is the first page opened while using the app. It displays a list of reservations for the current day (if any) and a list of any tables. Above the lists it displays 3 nagivation buttons to navigate through different dates and view any reservations assigned to those days.
 ##### For each reservation listed, there is a:
+![Reservation](https://user-images.githubusercontent.com/81534398/144500110-22c7fb01-9d88-4459-b11c-1f0edfc02957.png)
  - Cancel Button: Clicking this button changes the status of the reservation to "canceled". 
 
  - Seat Button: This button is only displayed if the reservation status is "booked". A reservation can have a status of 'booked', 'seated', 'finished', and 'canceled'. 
@@ -37,12 +35,16 @@ file:///Users/colinweaver/Desktop/Reservations-screenshots/Dashboard%20Page.png
  - Finish Button: This button is only displayed if the table status is 'Occupied' which means it has a reservation associated with it. 
 
 #### Search: 
+![Search-Page](https://user-images.githubusercontent.com/81534398/144499963-5c48b01c-7c1a-4fc5-b62f-73dd9a65de78.png)
+
 - This page displays a search bar (to input a number) and 'Find' button to submit the search. When you click the find button it displays a list of reservations with phone numbers containing the input numbers. The same buttons can be found in the listed reservations displayed on this page as the ones displayed in the dashboard page.
 
 #### Create Reservation:
+![Add-Reservation-Page](https://user-images.githubusercontent.com/81534398/144500002-e7164614-d97f-4f0e-8caa-e094fc563b22.png)
 - This page displays a form that allows you to input and save the required data for the reservation. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the reservation and a 'Cancel' button that takes you back to previous page. 
 
 #### Create Table:
+![Add-Table-Page](https://user-images.githubusercontent.com/81534398/144500025-f50f8e90-95e0-48e3-a806-0f5563389eb9.png)
 - This page displays a form that allows you to input and save the required data for the table. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the table and a 'Cancel' button that takes you back to previous page. 
 
 #### Edit Reservation:
@@ -58,17 +60,17 @@ The API consists of a various routes to '/reservations' and '/tables'.
 
 ### /reservations routes:
 1. /reservations?date={0000-00-00}
--LIST: This route responds with a list of reservations that have reservation_date matching the query date sorted by time.
+- LIST: This route responds with a list of reservations that have reservation_date matching the query date sorted by time.
 
 1. /reservations
--CREATE: This route receives a new reservation object in the request body and responds with the new reservation object once it has been successfully created.
+- CREATE: This route receives a new reservation object in the request body and responds with the new reservation object once it has been successfully created.
 
 1. /reservations/:reservation_id
--READ: This route responds with a reservation whose reservation_id matches the reservation_id passed in route param.
--UPDATE: This route recieves an updated reservation object in the request body and responds with the updated reservation object when the reservation has been successfully updated. 
+- READ: This route responds with a reservation whose reservation_id matches the reservation_id passed in route param.
+- UPDATE: This route recieves an updated reservation object in the request body and responds with the updated reservation object when the reservation has been successfully updated. 
 
 1. /reservations/:reservation_id/status: 
--UPDATE: This route recieves a status in the request body and responds with the updated status when the reservation's status has been successfully updated. 
+- UPDATE: This route recieves a status in the request body and responds with the updated status when the reservation's status has been successfully updated. 
 
 ### /tables routes:
 1. /tables
