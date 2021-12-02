@@ -15,36 +15,40 @@ This app allows you to manage restaurant reservations by creating tables and res
 1. cancel a reservation
 
 ### The following are the pages displayed while using the app: 
--Every page displays the menu at the top which allows you to navigate to the primary pages: Dashboard, Search, Create Reservation, Create Table. Through links in some of the previous pages you can access the following pages: Edit Reservation, Edit Table, Seat Reservation.
--Complete list of pages in the app: Dashboard, Search, Create Reservation, Create Table, Edit Reservation, Seat Reservation.
--Links in the app include: Finish Reservation, Cancel Reservation,  
+- Every page displays the menu at the top which allows you to navigate to the primary pages: Dashboard, Search, Create Reservation, Create Table. Through links in some of the previous pages you can access the following pages: Edit Reservation, Edit Table, Seat Reservation.
+- Complete list of pages in the app: Dashboard, Search, Create Reservation, Create Table, Edit Reservation, Seat Reservation.
+- Links in the app include: Finish Reservation, Cancel Reservation,  
 
 
 #### Dashboard: 
--This is the first page opened while using the app. It displays a list of reservations for the current day (if any) and a list of any tables. Above the lists it displays 3 nagivation buttons to navigate through different dates and view any reservations assigned to those days.
+
+file:///Users/colinweaver/Desktop/Reservations-screenshots/Dashboard%20Page.png
+
+
+- This is the first page opened while using the app. It displays a list of reservations for the current day (if any) and a list of any tables. Above the lists it displays 3 nagivation buttons to navigate through different dates and view any reservations assigned to those days.
 ##### For each reservation listed, there is a:
- -Cancel Button: Clicking this button changes the status of the reservation to "canceled". 
+ - Cancel Button: Clicking this button changes the status of the reservation to "canceled". 
 
- -Seat Button: This button is only displayed if the reservation status is "booked". A reservation can have a status of 'booked', 'seated', 'finished', and 'canceled'. 
+ - Seat Button: This button is only displayed if the reservation status is "booked". A reservation can have a status of 'booked', 'seated', 'finished', and 'canceled'. 
 
- -Edit Button: This button takes you to the 'edit reservation' page and allows you to modify the reservation.
+ - Edit Button: This button takes you to the 'edit reservation' page and allows you to modify the reservation.
 ##### For each table listed, there is a:
- -Finish Button: This button is only displayed if the table status is 'Occupied' which means it has a reservation associated with it. 
+ - Finish Button: This button is only displayed if the table status is 'Occupied' which means it has a reservation associated with it. 
 
 #### Search: 
--This page displays a search bar (to input a number) and 'Find' button to submit the search. When you click the find button it displays a list of reservations with phone numbers containing the input numbers. The same buttons can be found in the listed reservations displayed on this page as the ones displayed in the dashboard page.
+- This page displays a search bar (to input a number) and 'Find' button to submit the search. When you click the find button it displays a list of reservations with phone numbers containing the input numbers. The same buttons can be found in the listed reservations displayed on this page as the ones displayed in the dashboard page.
 
 #### Create Reservation:
--This page displays a form that allows you to input and save the required data for the reservation. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the reservation and a 'Cancel' button that takes you back to previous page. 
+- This page displays a form that allows you to input and save the required data for the reservation. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the reservation and a 'Cancel' button that takes you back to previous page. 
 
 #### Create Table:
--This page displays a form that allows you to input and save the required data for the table. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the table and a 'Cancel' button that takes you back to previous page. 
+- This page displays a form that allows you to input and save the required data for the table. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the table and a 'Cancel' button that takes you back to previous page. 
 
 #### Edit Reservation:
--You access this page by clicking the 'Edit' button displayed on a reservation with a status of 'booked.' This page displays a form that contains data from previous reservation and that allows you to modify the required data for the reservation. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the reservation and a 'Cancel' button that takes you back to previous page. 
+- You access this page by clicking the 'Edit' button displayed on a reservation with a status of 'booked.' This page displays a form that contains data from previous reservation and that allows you to modify the required data for the reservation. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the reservation and a 'Cancel' button that takes you back to previous page. 
 
 #### Seat Reservation:
--This page displays a drop down menu of the tables and allows you to select one of them to assign the reservation to. You access this page via the "Seat" button listed on reservations with a status of 'booked.' When a table is selected you press the "Submit" button to change the status of the table to 'Occupied' and the reservation status to 'Seated'. If you press the 'Cancel' button it takes you to the previous page. 
+- This page displays a drop down menu of the tables and allows you to select one of them to assign the reservation to. You access this page via the "Seat" button listed on reservations with a status of 'booked.' When a table is selected you press the "Submit" button to change the status of the table to 'Occupied' and the reservation status to 'Seated'. If you press the 'Cancel' button it takes you to the previous page. 
 
 
  ---------------------------------------------------------------------------------------------------------------
@@ -67,22 +71,22 @@ The API consists of a various routes to '/reservations' and '/tables'.
 
 ### /tables routes:
 1. /tables
--LIST: This route responds with a list of all tables sorted in ascending order by table_name.
--CREATE: This route recieves a table object in the request body and responds with the table object when the table has been successfully created. 
+- LIST: This route responds with a list of all tables sorted in ascending order by table_name.
+- CREATE: This route recieves a table object in the request body and responds with the table object when the table has been successfully created. 
 
 1. /tables/:table_id/seat:
--UPDATE: This route recieves an updated table status in the request body and updates the status of the table whose table_id matches the table_id in the param as well as the status of the reservation now associated to the table. It then responds with the same status as the request body when the status of the table has been successfully updated. 
--DELETE: This route updates the reservation_id column of the table whose table_id matches the table_id in the param so it no longer has an associated reservation and also sets the status of the reservation that was associated with that table to 'finished.' It responds with 'finished'.
+- UPDATE: This route recieves an updated table status in the request body and updates the status of the table whose table_id matches the table_id in the param as well as the status of the reservation now associated to the table. It then responds with the same status as the request body when the status of the table has been successfully updated. 
+- DELETE: This route updates the reservation_id column of the table whose table_id matches the table_id in the param so it no longer has an associated reservation and also sets the status of the reservation that was associated with that table to 'finished.' It responds with 'finished'.
 
 
  ---------------------------------------------------------------------------------------------------------------
 ## Technologies Used:
 
 1. Frontend:
--I used React to develop the app in JavaScript and used various React libraries and features. For styling I used CSS flexbox heavily (the project's styling code also contains some boostrap classes already present in the starter code).
+- I used React to develop the app in JavaScript and used various React libraries and features. For styling I used CSS flexbox heavily (the project's styling code also contains some boostrap classes already present in the starter code).
 
 1. Backend:
--I used Express to develop the API. I developed the routes using JavaScript and used the Knex library to query the PostgreSQL database. I also used the Knex library to develop the seed and migration files. 
+- I used Express to develop the API. I developed the routes using JavaScript and used the Knex library to query the PostgreSQL database. I also used the Knex library to develop the seed and migration files. 
 
  ---------------------------------------------------------------------------------------------------------------
 ## Installation: 
