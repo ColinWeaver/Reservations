@@ -48,9 +48,11 @@ This app allows you to manage restaurant reservations by creating tables and res
 - This page displays a form that allows you to input and save the required data for the table. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the table and a 'Cancel' button that takes you back to previous page. 
 
 #### Edit Reservation:
+![Edit-Reservation-Page](https://user-images.githubusercontent.com/81534398/144500773-3bef5131-34c9-4d14-9cda-d7c8f8057c0d.png)
 - You access this page by clicking the 'Edit' button displayed on a reservation with a status of 'booked.' This page displays a form that contains data from previous reservation and that allows you to modify the required data for the reservation. No form can be left blank and there is various validation from the API that displays an error if any field is not filled in correctly. Below the form is a "Submit" button that allows you to save the reservation and a 'Cancel' button that takes you back to previous page. 
 
 #### Seat Reservation:
+![Seat-Reservation-Page](https://user-images.githubusercontent.com/81534398/144500826-259623e3-9ae5-4020-935f-b041c1c0dd85.png)
 - This page displays a drop down menu of the tables and allows you to select one of them to assign the reservation to. You access this page via the "Seat" button listed on reservations with a status of 'booked.' When a table is selected you press the "Submit" button to change the status of the table to 'Occupied' and the reservation status to 'Seated'. If you press the 'Cancel' button it takes you to the previous page. 
 
 
