@@ -4,6 +4,7 @@
 ## Summary:
 This app allows you to manage restaurant reservations by creating tables and reservations and modifying the associations between them and the statuses of the reservations and tables. After creating a reservation you can edit it, seat it at a table, and cancel it. After creating a table you can finish a seating if a reservation is seated at it. Each table has a status of either: 'Free' or 'Occupied'. Each reservation has a status of either: 'booked', 'seated', or 'finished.' There is also a search page where you can search through the reservations by phone number. All reservations display a 'Cancel' button and depending on their status, reservations display 'Seat' and 'Edit' buttons. Depending on their status, a table displays a 'Finish' button.
 
+![Dashboard Page](https://user-images.githubusercontent.com/81534398/144499189-325f8069-6b4d-4be8-861a-dc2d9ac911ae.png)
 
 ## FURTHER DETAILS:
 ### This application is used to create restaurant reservations and assign/track tables for them. The apps functionality includes the ability to:
