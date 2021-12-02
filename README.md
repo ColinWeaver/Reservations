@@ -61,13 +61,13 @@ This app allows you to manage restaurant reservations by creating tables and res
 The API consists of a various routes to '/reservations' and '/tables'.
 
 ### /reservations routes:
-1. /reservations?date={0000-00-00}
+#### /reservations?date={0000-00-00}
 - LIST: This route responds with a list of reservations that have reservation_date matching the query date sorted by time.
 
-1. /reservations
+#### /reservations
 - CREATE: This route receives a new reservation object in the request body and responds with the new reservation object once it has been successfully created.
 
-1. /reservations/:reservation_id
+#### /reservations/:reservation_id
 - READ: This route responds with a reservation whose reservation_id matches the reservation_id passed in route param.
 - UPDATE: This route recieves an updated reservation object in the request body and responds with the updated reservation object when the reservation has been successfully updated. 
 
@@ -75,11 +75,11 @@ The API consists of a various routes to '/reservations' and '/tables'.
 - UPDATE: This route recieves a status in the request body and responds with the updated status when the reservation's status has been successfully updated. 
 
 ### /tables routes:
-1. /tables
+#### /tables
 - LIST: This route responds with a list of all tables sorted in ascending order by table_name.
 - CREATE: This route recieves a table object in the request body and responds with the table object when the table has been successfully created. 
 
-1. /tables/:table_id/seat:
+#### /tables/:table_id/seat:
 - UPDATE: This route recieves an updated table status in the request body and updates the status of the table whose table_id matches the table_id in the param as well as the status of the reservation now associated to the table. It then responds with the same status as the request body when the status of the table has been successfully updated. 
 - DELETE: This route updates the reservation_id column of the table whose table_id matches the table_id in the param so it no longer has an associated reservation and also sets the status of the reservation that was associated with that table to 'finished.' It responds with 'finished'.
 
@@ -87,10 +87,10 @@ The API consists of a various routes to '/reservations' and '/tables'.
  ---------------------------------------------------------------------------------------------------------------
 ## Technologies Used:
 
-1. Frontend:
+### Frontend:
 - I used React to develop the app in JavaScript and used various React libraries and features. For styling I used CSS flexbox heavily (the project's styling code also contains some boostrap classes already present in the starter code).
 
-1. Backend:
+### Backend:
 - I used Express to develop the API. I developed the routes using JavaScript and used the Knex library to query the PostgreSQL database. I also used the Knex library to develop the seed and migration files. 
 
  ---------------------------------------------------------------------------------------------------------------
