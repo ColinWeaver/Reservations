@@ -71,7 +71,7 @@ The API consists of a various routes to '/reservations' and '/tables'.
 - READ: This route responds with a reservation whose reservation_id matches the reservation_id passed in route param.
 - UPDATE: This route recieves an updated reservation object in the request body and responds with the updated reservation object when the reservation has been successfully updated. 
 
-1. /reservations/:reservation_id/status: 
+#### /reservations/:reservation_id/status: 
 - UPDATE: This route recieves a status in the request body and responds with the updated status when the reservation's status has been successfully updated. 
 
 ### /tables routes:
