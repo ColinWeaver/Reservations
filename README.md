@@ -4,8 +4,6 @@
 ## Summary:
 This app allows you to manage restaurant reservations by creating tables and reservations and modifying the associations between them and the statuses of the reservations and tables. After creating a reservation you can edit it, seat it at a table, and cancel it. After creating a table you can finish a seating if a reservation is seated at it. Each table has a status of either: 'Free' or 'Occupied'. Each reservation has a status of either: 'booked', 'seated', or 'finished.' There is also a search page where you can search through the reservations by phone number. All reservations display a 'Cancel' button and depending on their status, reservations display 'Seat' and 'Edit' buttons. Depending on their status, a table displays a 'Finish' button.
 
-![Dashboard Page](https://user-images.githubusercontent.com/81534398/144499189-325f8069-6b4d-4be8-861a-dc2d9ac911ae.png)
-
 ## FURTHER DETAILS:
 ### This application is used to create restaurant reservations and assign/track tables for them. The apps functionality includes the ability to:
 1. create reservations
@@ -25,7 +23,8 @@ This app allows you to manage restaurant reservations by creating tables and res
 ![Dashboard-Page](https://user-images.githubusercontent.com/81534398/144499852-c28f0e1b-07a9-4f32-b5f4-4e02f7e4dee7.png)
 - This is the first page opened while using the app. It displays a list of reservations for the current day (if any) and a list of any tables. Above the lists it displays 3 nagivation buttons to navigate through different dates and view any reservations assigned to those days.
 ##### For each reservation listed, there is a:
-![Reservation](https://user-images.githubusercontent.com/81534398/144500110-22c7fb01-9d88-4459-b11c-1f0edfc02957.png)
+![Reservation](https://user-images.githubusercontent.com/81534398/144527845-cf6ba3bf-ad5f-4ee0-92f2-ade9006a161d.png)
+
  - Cancel Button: Clicking this button changes the status of the reservation to "canceled". 
 
  - Seat Button: This button is only displayed if the reservation status is "booked". A reservation can have a status of 'booked', 'seated', 'finished', and 'canceled'. 
