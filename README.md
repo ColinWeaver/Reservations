@@ -87,7 +87,7 @@ The API consists of a various routes to '/reservations' and '/tables'.
 ## Technologies Used:
 
 ### Frontend:
-- I used React to develop the app in JavaScript and used various React libraries and features. For styling I used CSS flexbox heavily (the project's styling code also contains some boostrap classes already present in the starter code).
+- I used React to develop the app in JavaScript and used various React libraries and features. For styling I used CSS. There are some Boostrap classes left from the code I received before developing the app which I decided to leave.
 
 ### Backend:
 - I used Express to develop the API. I developed the routes using JavaScript and used the Knex library to query the PostgreSQL database. I also used the Knex library to develop the seed and migration files. 
