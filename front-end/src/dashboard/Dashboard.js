@@ -186,7 +186,7 @@ function changeDayHandler(config){
 
       return (
         <>
-        <div className="list-item">
+        <div className="list-item" key={table.table_id}>
         <div className='list-data-container'>
         <p><b>Table Name:&nbsp;</b>{table.table_name}</p>
         <p><b>Table ID: &nbsp;</b>{table.table_id}</p>

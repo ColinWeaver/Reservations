@@ -103,7 +103,7 @@ if (status === 'booked'){
        
       //----------------------------------------------MAIN COMPONENT RENDER RETURN----------------------------------------------------------------------
         return (
-        <div className="list-item">
+        <div className="list-item" key={reservation.reservation_id}>
           <div className="list-data-container">
           <p><b>Reservation ID: &nbsp;</b>{reservation.reservation_id}</p>
           <p data-reservation-id-status={reservation.reservation_id}> <b>Reservations Status:&nbsp;</b>{status} </p>

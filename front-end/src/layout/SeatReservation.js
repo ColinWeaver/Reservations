@@ -122,7 +122,7 @@ setPreStop={setPreStop}
     <select name="table_id" value={optionValue} onChange={changeHandler}>
     {tables.map((table) => {
       return (
-                <option 
+                <option key={table.table_id}
                 value={table.table_id}>
                 {table.table_name} - {table.capacity}
                 </option>
