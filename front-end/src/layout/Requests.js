@@ -38,6 +38,14 @@ function Requests(props){
       fetchId = requestConfig.fetchId;
     };
 
+    //add abort controller to option
+    if (option){
+      option.signal = controller.signal
+    }
+    else {
+      option = { signal: controller.signal }
+    }
+
   
     //------------------------------------SETTING URL FOR FETCH------------------------------------------
     const API_BASE_URL =
