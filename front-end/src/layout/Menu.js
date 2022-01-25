@@ -45,7 +45,7 @@ function Menu() {
      <div className="title">
          <Link to="/">
           <h1 className="title">
-            <span>Periodic Tables</span>
+            <span>Reservations</span>
           </h1>
         </Link> 
     </div>

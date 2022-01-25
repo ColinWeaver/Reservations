@@ -100,7 +100,11 @@ if (status === 'booked'){
         }
         else return `${hour}:${minute} AM`
        };
+
        
+       const date = reservation.reservation_date.slice(0, 10);
+       
+
       //----------------------------------------------MAIN COMPONENT RENDER RETURN----------------------------------------------------------------------
         return (
         <div className="list-item" key={reservation.reservation_id}>
@@ -110,7 +114,7 @@ if (status === 'booked'){
           <p><b>Last Name:&nbsp;</b>{reservation.last_name}</p>
           <p><b>First Name:&nbsp;</b>{reservation.first_name}</p>
           <p><b>Mobile Number:&nbsp;</b>{reservation.mobile_number}</p>
-          <p><b>Reservation Date: &nbsp;</b>{reservation.reservation_date}</p>
+          <p><b>Reservation Date: &nbsp;</b>{date}</p>
           <p><b>Reservation Time: &nbsp;</b>{time()}</p>
           <p><b>Number of People:&nbsp; </b>{reservation.people}</p>
           </div>
