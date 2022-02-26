@@ -1,17 +1,26 @@
 
+html {
+min-height: 100vh;
+}
+.layout {
+  min-height: 100vh;
+  background-color: #D3D3D3;
+}
+
+
+
 /*------------------------------LAYOUT-------------------------------------*/
 .menu {
 width: 100%;
 }
 .routes {
- margin-top: 50px;
+ /* margin-top: 50px; */
+padding-top: 50px;
 }
 /*-------------------------------BODY--------------------------------------------*/
-
 body {
   font-family: helvetica;
 }
-
 
 /*-----------------------------------MAIN-------------------------------------------*/
 main {
@@ -20,6 +29,10 @@ main {
   justify-content: center;
   max-width: 100%;
   align-items: center;
+  /* top: 150px; */
+  margin-top: 0px;
+  /* background-color: #EDEDED; */
+
 }
 
 /*---------------------------------HEADER-------------------------------------*/
@@ -27,10 +40,12 @@ header {
   display: flex;
   flex-direction: column;
   background-color: #393a44;
+  
   text-align: center;
   height: 150px;
   align-items: center;
   width: 100%;
+  margin-bottom: 0px;
 }
 
 nav {
@@ -145,7 +160,7 @@ flex-direction: column;
 justify-content: space-between;
 width: 80%;
 padding: 50px;
-background-color:#f2f2f2;
+background-color:#DCDCDC;
 }
 
 .buttons-container {
