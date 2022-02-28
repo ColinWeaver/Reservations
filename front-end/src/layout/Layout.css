@@ -1,3 +1,14 @@
+/* 
+TODO: header navigation needs to be responsive
+TODO: loading needs to load header and main at same time prior to data being available
+ Should load header, date navigation, and a 'loading reservation and table data.." message
+TODO: make dashbaord say home
+TODO: requests component clean up
+
+ */
+
+/* Note: menu component contains header elements and routes 
+component contains all other page routing. Layout contains menu and routes */
 
 html {
 min-height: 100vh;
@@ -7,14 +18,11 @@ min-height: 100vh;
   background-color: #D3D3D3;
 }
 
-
-
 /*------------------------------LAYOUT-------------------------------------*/
 .menu {
 width: 100%;
 }
 .routes {
- /* margin-top: 50px; */
 padding-top: 50px;
 }
 /*-------------------------------BODY--------------------------------------------*/
@@ -29,10 +37,7 @@ main {
   justify-content: center;
   max-width: 100%;
   align-items: center;
-  /* top: 150px; */
   margin-top: 0px;
-  /* background-color: #EDEDED; */
-
 }
 
 /*---------------------------------HEADER-------------------------------------*/
@@ -40,7 +45,6 @@ header {
   display: flex;
   flex-direction: column;
   background-color: #393a44;
-  
   text-align: center;
   height: 150px;
   align-items: center;
