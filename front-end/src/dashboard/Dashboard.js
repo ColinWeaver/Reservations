@@ -208,9 +208,9 @@ function changeDayHandler(config){
   return (
   <main>
      <div className="date-nav">
-        <button className="date-nav-button" onClick={() => changeDayHandler("previous")}>Previous</button>
+        <button className="date-nav-button" onClick={() => changeDayHandler("previous")}>{"< Previous"}</button>
         <button className="date-nav-button" onClick={() => changeDayHandler("today")}>Today</button>
-        <button className="date-nav-button" onClick={() => changeDayHandler("next")}>Next</button>
+        <button className="date-nav-button" onClick={() => changeDayHandler("next")}>{"Next >"}</button>
      </div>
 
      <div className="errors">

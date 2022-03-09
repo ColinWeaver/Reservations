@@ -1,5 +1,7 @@
 /* 
 TODO: header navigation needs to be responsive
+TODO: header position fixed
+TODO: cleanup layout.css
 TODO: loading needs to load header and main at same time prior to data being available
  Should load header, date navigation, and a 'loading reservation and table data.." message
 TODO: make dashbaord say home
@@ -23,7 +25,7 @@ min-height: 100vh;
 width: 100%;
 }
 .routes {
-padding-top: 50px;
+padding-top: 200px;
 }
 /*-------------------------------BODY--------------------------------------------*/
 body {
@@ -50,6 +52,7 @@ header {
   align-items: center;
   width: 100%;
   margin-bottom: 0px;
+  position: fixed;
 }
 
 nav {
@@ -103,6 +106,7 @@ a {
 nav ul li a:hover {
   text-decoration: none;
   color: grey;
+
 }
 nav ul li a {
   color: white;

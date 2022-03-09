@@ -42,7 +42,7 @@ function Menu() {
  //------------------------------------MAIN COMPONENT RENDER RETURN---------------------------------------------
   return (
     <header>
-     <div className="title">
+     <div style={{marginTop: "10px"}} className="title">
          <Link to="/">
           <h1 className="title">
             <span>Reservations</span>
@@ -55,7 +55,7 @@ function Menu() {
           <li className={dashboardClass}>
             <Link to="/dashboard">
               <span className="oi oi-dashboard" />
-              &nbsp;Dashboard
+              &nbsp;Home
             </Link>
           </li>
 
